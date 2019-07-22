@@ -2,7 +2,6 @@
 #include "cell_id.h"
 #include "latlng.h"
 #include "loop.h"
-#include "point.h"
 #include "polygon.h"
 #include "region_coverer.h"
 
@@ -12,8 +11,7 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
   LatLng::Init(env, exports);
   Loop::Init(env, exports);
   Polygon::Init(env, exports);
-  RegionCoverer::Init(env, exports);
-  return Point::Init(env, exports);
+  return RegionCoverer::Init(env, exports);
 }
 
 NODE_API_MODULE(NODE_GYP_MODULE_NAME, InitAll)

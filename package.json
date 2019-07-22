@@ -4,11 +4,12 @@
   "description": "Node.js JavaScript bindings for Google S2",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "Jeff Kao (jeff@radar.io)",
   "license": "ISC",
   "devDependencies": {
+    "jest": "^24.8.0",
     "node-gyp": "^5.0.2"
   },
   "dependencies": {

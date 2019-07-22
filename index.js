@@ -1,8 +1,6 @@
 const s2 = require('bindings')('s2');
 
 console.log("s2", s2);
-const x = new s2.Point(20);
-console.log(x.plusOne());
 
 console.log(new s2.LatLng(35.6586, 139.7454).toString());
 const y = new s2.LatLng(35.6586, 69.69).normalized();

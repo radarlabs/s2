@@ -19,6 +19,8 @@ class LatLng : public Napi::ObjectWrap<LatLng> {
   private:
     Napi::Value ToString(const Napi::CallbackInfo &info);
     Napi::Value Normalized(const Napi::CallbackInfo &info);
+    Napi::Value Latitude(const Napi::CallbackInfo &info);
+    Napi::Value Longitude(const Napi::CallbackInfo &info);
     S2LatLng s2latlng;
 };
 

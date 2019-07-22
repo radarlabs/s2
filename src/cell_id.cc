@@ -12,6 +12,7 @@ Napi::Object CellId::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("intersects", &CellId::Intersects),
     InstanceMethod("parent", &CellId::Parent),
     InstanceMethod("child", &CellId::Child),
+    InstanceMethod("level", &CellId::Level),
   });
 
   constructor = Napi::Persistent(func);
@@ -26,7 +27,7 @@ CellId::CellId(const Napi::CallbackInfo& info) : Napi::ObjectWrap<CellId>(info) 
   Napi::HandleScope scope(env);
 
   int length = info.Length();
-  string badArgs = "(id: number) | (ll: LatLng) | (p: Point) expected.";
+  string badArgs = "(id: number) | (ll: LatLng) expected.";
 
   if (length <= 0 || (!info[0].IsNumber() && !info[0].IsObject())) {
     Napi::TypeError::New(env, badArgs).ThrowAsJavaScriptException();
@@ -87,14 +88,16 @@ Napi::Value CellId::Intersects(const Napi::CallbackInfo &info) {
 
 Napi::Value CellId::Parent(const Napi::CallbackInfo &info) {
   Napi::Number parentId;
+  Napi::Env env = info.Env();
+
   if (info.Length() <= 0 || !info[0].IsNumber()) {
-    parentId = Napi::Number::New(info.Env(), s2cellid.parent().id());
+    parentId =
+        s2cellid.level() <= 0 ? Napi::Number::New(env, s2cellid.id())
+                              : Napi::Number::New(env, s2cellid.parent().id());
   } else {
-    Napi::Number level = info[0].As<Napi::Number>();
-    parentId = Napi::Number::New(
-      info.Env(),
-      s2cellid.parent(level.Int32Value()).id()
-    );
+    int level = info[0].As<Napi::Number>().Int32Value();
+    int finalLevel = level <= 0 ? 0 : level;
+    parentId = Napi::Number::New(env, s2cellid.parent(finalLevel).id());
   }
   return constructor.New({ parentId });
 }
@@ -115,7 +118,7 @@ Napi::Value CellId::Child(const Napi::CallbackInfo &info) {
 }
 
 Napi::Value CellId::Level(const Napi::CallbackInfo &info) {
-  return constructor.New({ Napi::Number::New(info.Env(), s2cellid.level()) });
+  return Napi::Number::New(info.Env(), s2cellid.level());
 }
 
 S2CellId CellId::Get() {

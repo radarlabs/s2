@@ -6,6 +6,8 @@ Napi::Object LatLng::Init(Napi::Env env, Napi::Object exports) {
   Napi::HandleScope scope(env);
 
   Napi::Function func = DefineClass(env, "LatLng", {
+    InstanceMethod("latitude", &LatLng::Latitude),
+    InstanceMethod("longitude", &LatLng::Longitude),
     InstanceMethod("toString", &LatLng::ToString),
     InstanceMethod("normalized", &LatLng::Normalized)
   });
@@ -55,5 +57,19 @@ Napi::Value LatLng::Normalized(const Napi::CallbackInfo& info) {
   return LatLng::NewInstance(
     Napi::Number::New(info.Env(), normalized.lat().degrees()),
     Napi::Number::New(info.Env(), normalized.lng().degrees())
+  );
+}
+
+Napi::Value LatLng::Latitude(const Napi::CallbackInfo& info) {
+  return Napi::Number::New(
+    info.Env(),
+    this->s2latlng.lat().degrees()
+  );
+}
+
+Napi::Value LatLng::Longitude(const Napi::CallbackInfo& info) {
+  return Napi::Number::New(
+    info.Env(),
+    this->s2latlng.lng().degrees()
   );
 }
