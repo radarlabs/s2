@@ -1,0 +1,18 @@
+{
+  "name": "@radarlabs/s2",
+  "version": "0.0.1",
+  "description": "Node.js JavaScript bindings for Google S2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jeff Kao (jeff@radar.io)",
+  "license": "ISC",
+  "devDependencies": {
+    "node-gyp": "^5.0.2"
+  },
+  "dependencies": {
+    "bindings": "^1.5.0",
+    "node-addon-api": "^1.6.3"
+  }
+}
