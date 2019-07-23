@@ -15,12 +15,12 @@ class CellId : public Napi::ObjectWrap<CellId> {
 
     static Napi::FunctionReference constructor;
     static Napi::Object Init(Napi::Env env, Napi::Object exports);
+    static Napi::Value FromTokenString(const Napi::Env env, const string token);
 
     S2CellId Get();
 
   private:
     static Napi::Value FromToken(const Napi::CallbackInfo &info);
-    static Napi::Value FromTokenString(const Napi::Env env, const string token);
 
     Napi::Value Id(const Napi::CallbackInfo &info);
     Napi::Value Token(const Napi::CallbackInfo &info);

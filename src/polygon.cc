@@ -27,15 +27,10 @@ Polygon::Polygon(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Polygon>(inf
 
   Napi::ArrayBuffer encoded = info[0].As<Napi::ArrayBuffer>();
 
-  this->s2polygon = new S2Polygon();
+  this->s2polygon = std::make_shared<S2Polygon>();
   Decoder decoder(encoded.Data(), encoded.ByteLength());
-  this->s2polygon->Decode(&decoder);
-}
-
-Polygon::~Polygon() {
-  delete this->s2polygon;
-}
-
-S2Polygon* Polygon::Get() {
-  return this->s2polygon;
+  if (!this->s2polygon->Decode(&decoder)) {
+    Napi::TypeError::New(env, "malformed ArrayBuffer for S2Polygon.").ThrowAsJavaScriptException();
+    return;
+  }
 }

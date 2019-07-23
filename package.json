@@ -4,7 +4,7 @@
   "description": "Node.js JavaScript bindings for Google S2",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --logHeapUsage"
   },
   "author": "Jeff Kao (jeff@radar.io)",
   "license": "ISC",

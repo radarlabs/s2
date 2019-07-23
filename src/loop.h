@@ -14,13 +14,8 @@ class Loop : public Napi::ObjectWrap<Loop> {
     static Napi::Object Init(Napi::Env env, Napi::Object exports);
 
     Loop(const Napi::CallbackInfo& info);
-    ~Loop();
 
-    S2Loop* Get();
-
-  private:
-    std::vector<S2Point> pointVector;
-    S2Loop* s2loop;
+    std::shared_ptr<S2Loop> s2loop;
 };
 
 #endif

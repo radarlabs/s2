@@ -20,7 +20,7 @@ RegionCoverer::RegionCoverer(const Napi::CallbackInfo& info) : Napi::ObjectWrap<
   Napi::Env env = info.Env();
   Napi::HandleScope scope(env);
 
-  S2RegionCoverer::Options options = S2RegionCoverer::Options();
+  this->options = std::make_unique<S2RegionCoverer::Options>();
 
   int length = info.Length();
   if (length >= 1 && info[0].IsObject()) {
@@ -32,25 +32,17 @@ RegionCoverer::RegionCoverer(const Napi::CallbackInfo& info) : Napi::ObjectWrap<
     Napi::Value maxCellsRaw = optionsObject["max_cells"];
 
     if (minLevelRaw.IsNumber()) {
-      options.set_min_level(minLevelRaw.As<Napi::Number>().Uint32Value());
+      this->options->set_min_level(minLevelRaw.As<Napi::Number>().Uint32Value());
     }
     if (maxLevelRaw.IsNumber()) {
-      options.set_max_level(maxLevelRaw.As<Napi::Number>().Uint32Value());
+      this->options->set_max_level(maxLevelRaw.As<Napi::Number>().Uint32Value());
     }
     if (maxCellsRaw.IsNumber()) {
-      options.set_max_cells(maxCellsRaw.As<Napi::Number>().Uint32Value());
+      this->options->set_max_cells(maxCellsRaw.As<Napi::Number>().Uint32Value());
     }
 
-    this->s2regioncoverer = new S2RegionCoverer(options);
+    this->s2regioncoverer = std::make_unique<S2RegionCoverer>(*options);
   }
-}
-
-RegionCoverer::~RegionCoverer() {
-  delete this->s2regioncoverer;
-}
-
-S2RegionCoverer* RegionCoverer::Get() {
-  return this->s2regioncoverer;
 }
 
 Napi::Value RegionCoverer::GetCovering(const Napi::CallbackInfo &info) {
@@ -74,15 +66,13 @@ Napi::Value RegionCoverer::GetCovering(const Napi::CallbackInfo &info) {
   Polygon* polygon = Polygon::Unwrap(object);
 
   std::vector<S2CellId> cellIds;
-  this->s2regioncoverer->GetCovering(*polygon->Get(), &cellIds);
-
+  this->s2regioncoverer->GetCovering(*polygon->s2polygon, &cellIds);
 
   uint32_t size = cellIds.size();
   Napi::Array returnedIds = Napi::Array::New(env, size);
+
   for (uint32_t i = 0; i < size; i++) {
-    returnedIds[i] = CellId::constructor.New({
-      Napi::Number::New(env, cellIds[i].id())
-    });
+    returnedIds[i] = CellId::FromTokenString(env, cellIds[i].ToToken());
   }
 
   return returnedIds;

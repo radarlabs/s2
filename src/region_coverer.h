@@ -13,14 +13,12 @@ class RegionCoverer : public Napi::ObjectWrap<RegionCoverer> {
     static Napi::Object Init(Napi::Env env, Napi::Object exports);
 
     RegionCoverer(const Napi::CallbackInfo& info);
-    ~RegionCoverer();
-
-    S2RegionCoverer* Get();
 
   private:
     Napi::Value GetCovering(const Napi::CallbackInfo &info);
 
-    S2RegionCoverer* s2regioncoverer;
+    std::unique_ptr<S2RegionCoverer::Options> options;
+    std::unique_ptr<S2RegionCoverer> s2regioncoverer;
 };
 
 #endif

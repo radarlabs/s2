@@ -24,14 +24,8 @@ Builder::Builder(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Builder>(inf
   Napi::Env env = info.Env();
   Napi::HandleScope scope(env);
 
-  this->s2builderOptions = new S2Builder::Options();
-  this->s2builder = new S2Builder(*this->s2builderOptions);
-}
-
-Builder::~Builder() {
-  delete this->s2builderOptions;
-  delete this->s2builder;
-  delete this->output;
+  this->s2builderOptions = make_unique<S2Builder::Options>();
+  this->s2builder = make_unique<S2Builder>(*this->s2builderOptions);
 }
 
 Napi::Value Builder::AddLoop(const Napi::CallbackInfo &info) {
@@ -51,9 +45,11 @@ Napi::Value Builder::AddLoop(const Napi::CallbackInfo &info) {
 
   Loop* loop = Loop::Unwrap(object);
 
-  this->output = new S2Polygon();
-  this->s2builder->StartLayer(make_unique<S2PolygonLayer>(this->output));
-  this->s2builder->AddLoop(*loop->Get());
+  this->output = std::make_unique<S2Polygon>();
+  this->s2builder->StartLayer(
+    std::make_unique<S2PolygonLayer>(this->output.get())
+  );
+  this->s2builder->AddLoop(*loop->s2loop);
 
   return env.Null();
 }

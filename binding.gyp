@@ -103,8 +103,9 @@
       "third_party/s2geometry/src/s2/s2wedge_relations.cc",
     ],
     "defines": [
-      "NAPI_DISABLE_CPP_EXCEPTIONS",
-      "NDEBUG"
+      "NAPI_CPP_EXCEPTIONS",
+      "NDEBUG",
+      "NODE_ADDON_API_DISABLE_DEPRECATED"
     ],
     "include_dirs": [
       "<!@(node -p \"require('node-addon-api').include\")",
@@ -121,6 +122,7 @@
       }],
       ['OS=="mac"', {
         'xcode_settings': {
+          'CLANG_CXX_LIBRARY' : 'libc++',
           'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
           'OTHER_CFLAGS':[
             '-Wno-unused-private-field',

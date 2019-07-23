@@ -33,32 +33,19 @@ Loop::Loop(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Loop>(info)  {
     return;
   }
 
-  std::vector<S2Point> pointVector = std::vector<S2Point>();
+  std::vector<S2Point> pointVector;
   for (uint32_t i = 0; i < arrayLength; i++) {
     Napi::Value obj = llArray[i];
     LatLng* ll = LatLng::Unwrap(obj.As<Napi::Object>());
-
     S2Point point = ll->Get().Normalized().ToPoint().Normalize();
     pointVector.push_back(point);
   }
 
-  S2Loop* loop = new S2Loop(pointVector, S2Debug::ALLOW);
+  this->s2loop = std::make_shared<S2Loop>(pointVector, S2Debug::ALLOW);
+
   S2Error error;
-  if (loop->FindValidationError(&error)) {
+  if (this->s2loop->FindValidationError(&error)) {
     Napi::Error::New(env, StringPrintf("Loop is invalid: %s", error.text().c_str())).ThrowAsJavaScriptException();
     return;
   }
-
-  loop->Normalize();
-
-  this->pointVector = pointVector;
-  this->s2loop = loop;
-}
-
-Loop::~Loop() {
-  delete this->s2loop;
-}
-
-S2Loop* Loop::Get() {
-  return this->s2loop;
 }

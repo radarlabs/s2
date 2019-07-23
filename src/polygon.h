@@ -13,12 +13,8 @@ class Polygon : public Napi::ObjectWrap<Polygon> {
     static Napi::Object Init(Napi::Env env, Napi::Object exports);
 
     Polygon(const Napi::CallbackInfo& info);
-    ~Polygon();
 
-    S2Polygon* Get();
-
-  private:
-    S2Polygon* s2polygon;
+    std::shared_ptr<S2Polygon> s2polygon;
 };
 
 #endif
