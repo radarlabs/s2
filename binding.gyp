@@ -116,9 +116,21 @@
         'cflags!': [ '-fno-exceptions' ],
         'cflags_cc!': [ '-fno-exceptions' ],
         'cflags': [
-           '-Wno-unused-private-field',
            '-Wno-sign-compare',
-        ]
+           '-Wno-type-limits',
+           '-Wno-comment',
+           '-Wno-bool-compare',
+           '-Wno-extra',
+        ],
+        "cflags+": [
+          "-std=c++11"
+        ],
+        "cflags_c+": [
+          "-std=c++14"
+        ],
+        "cflags_cc+": [
+          "-std=c++14"
+        ],
       }],
       ['OS=="mac"', {
         'xcode_settings': {

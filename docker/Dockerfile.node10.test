@@ -1,0 +1,9 @@
+FROM node:10.16.0
+
+WORKDIR /app
+COPY . /app
+
+RUN npm install
+RUN PATH=$(npm bin):$PATH node-gyp rebuild
+
+CMD npm run test
