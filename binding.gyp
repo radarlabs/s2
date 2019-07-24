@@ -139,6 +139,7 @@
           'OTHER_CFLAGS':[
             '-Wno-unused-private-field',
             '-Wno-sign-compare',
+            '-std=c++14',
           ],
         },
 
