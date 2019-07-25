@@ -1,7 +1,7 @@
 #include "builder.h"
 
-using absl::make_unique;
 using s2builderutil::S2PolygonLayer;
+using absl::make_unique;
 
 Napi::FunctionReference Builder::constructor;
 
@@ -45,9 +45,9 @@ Napi::Value Builder::AddLoop(const Napi::CallbackInfo &info) {
 
   Loop* loop = Loop::Unwrap(object);
 
-  this->output = std::make_unique<S2Polygon>();
+  this->output = make_unique<S2Polygon>();
   this->s2builder->StartLayer(
-    std::make_unique<S2PolygonLayer>(this->output.get())
+    make_unique<S2PolygonLayer>(this->output.get())
   );
   this->s2builder->AddLoop(*loop->s2loop);
 

@@ -134,11 +134,11 @@
       }],
       ['OS=="mac"', {
         'xcode_settings': {
-          'CLANG_CXX_LIBRARY' : 'libc++',
           'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
-          'OTHER_CFLAGS':[
+          'OTHER_CPLUSPLUSFLAGS':[
             '-Wno-unused-private-field',
             '-Wno-sign-compare',
+            '-stdlib=libc++',
             '-std=c++14',
           ],
         },

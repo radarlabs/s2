@@ -1,5 +1,7 @@
 #include "region_coverer.h"
 
+using absl::make_unique;
+
 Napi::FunctionReference RegionCoverer::constructor;
 
 Napi::Object RegionCoverer::Init(Napi::Env env, Napi::Object exports) {
@@ -20,7 +22,7 @@ RegionCoverer::RegionCoverer(const Napi::CallbackInfo& info) : Napi::ObjectWrap<
   Napi::Env env = info.Env();
   Napi::HandleScope scope(env);
 
-  this->options = std::make_unique<S2RegionCoverer::Options>();
+  this->options = make_unique<S2RegionCoverer::Options>();
 
   int length = info.Length();
   if (length >= 1 && info[0].IsObject()) {
@@ -41,7 +43,7 @@ RegionCoverer::RegionCoverer(const Napi::CallbackInfo& info) : Napi::ObjectWrap<
       this->options->set_max_cells(maxCellsRaw.As<Napi::Number>().Uint32Value());
     }
 
-    this->s2regioncoverer = std::make_unique<S2RegionCoverer>(*options);
+    this->s2regioncoverer = make_unique<S2RegionCoverer>(*options);
   }
 }
 
