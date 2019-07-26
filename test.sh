@@ -12,3 +12,7 @@ NODE_10_IMAGE=test10
 NODE_10_DOCKERFILE=./docker/Dockerfile.node10.test
 docker build -t $NODE_10_IMAGE -f ./docker/Dockerfile.node10.test . && docker run $NODE_10_IMAGE:latest
 
+# test node 12
+NODE_12_IMAGE=test12
+NODE_12_DOCKERFILE=./docker/Dockerfile.node12.test
+docker build -t $NODE_12_IMAGE -f $NODE_12_DOCKERFILE . && docker run $NODE_12_IMAGE:latest
