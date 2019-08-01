@@ -95,3 +95,8 @@ test("CellId#child works", () => {
   expect(leaf.child(0).id()).toBe('6924438073539270971');
   expect(leaf.child(0).level()).toBe(30);
 });
+
+test("CellId#next works", () => {
+  const cellId = new s2.CellId('6924439526941130752');
+  expect(cellId.next().id()).toBe('6924439664380084224');
+});

@@ -12,6 +12,7 @@ Napi::Object CellId::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("intersects", &CellId::Intersects),
     InstanceMethod("parent", &CellId::Parent),
     InstanceMethod("child", &CellId::Child),
+    InstanceMethod("next", &CellId::Next),
     InstanceMethod("level", &CellId::Level),
     InstanceMethod("isLeaf", &CellId::IsLeaf),
     StaticMethod("fromToken", &CellId::FromToken),
@@ -124,6 +125,17 @@ Napi::Value CellId::Child(const Napi::CallbackInfo &info) {
     return CellId::FromTokenString(env, s2cellid.ToToken());
   }
   return CellId::FromTokenString(env, child.ToToken());
+}
+
+Napi::Value CellId::Next(const Napi::CallbackInfo &info) {
+  Napi::Env env = info.Env();
+
+  S2CellId next = s2cellid.next();
+
+  if (!next.is_valid()) {
+    return CellId::FromTokenString(env, s2cellid.ToToken());
+  }
+  return CellId::FromTokenString(env, next.ToToken());
 }
 
 Napi::Value CellId::Level(const Napi::CallbackInfo &info) {

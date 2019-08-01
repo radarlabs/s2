@@ -30,6 +30,7 @@ class CellId : public Napi::ObjectWrap<CellId> {
 
     Napi::Value Parent(const Napi::CallbackInfo &info);
     Napi::Value Child(const Napi::CallbackInfo &info);
+    Napi::Value Next(const Napi::CallbackInfo &info);
     Napi::Value Level(const Napi::CallbackInfo &info);
     Napi::Value IsLeaf(const Napi::CallbackInfo &info);
 
