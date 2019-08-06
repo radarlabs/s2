@@ -8,7 +8,7 @@
     "test": "jest --logHeapUsage"
   },
   "author": "Jeff Kao (jeff@radar.io)",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "jest": "^24.8.0",
     "node-gyp": "^5.0.2"
