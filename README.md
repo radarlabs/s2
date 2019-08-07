@@ -36,7 +36,7 @@ To generate a covering for a given area:
 ```
 const s2 = require('@radarlabs/s2');
 
-# an array of lat/lng pairs
+# an array of lat/lng pairs representing a region (a part of Brooklyn, in this case)
 const loopLLs = [[40.70113825399865,-73.99229764938354],[40.70113825399865,-73.98766279220581],[40.70382234072197,-73.98766279220581],[40.70382234072197,-73.99229764938354]];
 
 # map to an array of normalized s2.LatLng
@@ -51,7 +51,8 @@ builder.addLoop(loop);
 const polygon = builder.build();
 
 # generate s2 cells to cover this polygon
-const coverer = new s2.RegionCoverer({ min: 14, max: 14 });
+const s2level = 14;
+const coverer = new s2.RegionCoverer({ min: s2level, max: s2level });
 const covering = coverer.getCovering(polygon);
 covering.forEach(c => console.log(c.token()));
 
@@ -59,6 +60,17 @@ covering.forEach(c => console.log(c.token()));
 > 89c25a33
 > 89c25a35
 > 89c25a37
+
+# check if a point is contained inside this region
+const point = new s2.CellId(new s2.LatLng(40.70248844447621, -73.98991584777832));
+const pointAtLevel14 = point.parent(s2Level);
+console.log(pointAtLevel14.token());
+> 89c25a31
+
+const coveringSet = new Set(covering.map(c => c.token()));
+console.log(coveringSet.contains(pointAtLevel14.token()));
+> true
+
 ```
 
 Check if a cell is contained in another:
