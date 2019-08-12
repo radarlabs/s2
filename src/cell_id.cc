@@ -32,18 +32,21 @@ CellId::CellId(const Napi::CallbackInfo& info) : Napi::ObjectWrap<CellId>(info) 
   int length = info.Length();
   string badArgs = "(id: string) | (ll: LatLng) expected.";
 
-  if (length <= 0 || (!info[0].IsString() && !info[0].IsObject())) {
+  if (
+    length <= 0
+    || (!info[0].IsString() && !info[0].IsObject())
+  ) {
     Napi::TypeError::New(env, badArgs).ThrowAsJavaScriptException();
     return;
   }
 
-  if (info[0].IsString()) { // id
+  if (info[0].IsString()) {         // id: string
     Napi::String idString = info[0].As<Napi::String>();
     uint64_t id;
     std::istringstream iss(idString.Utf8Value());
     iss >> id;
     this->s2cellid = S2CellId(id);
-  } else if (info[0].IsObject()) { // ll
+  } else if (info[0].IsObject()) {  // ll: s2.LatLng
     Napi::Object object = info[0].As<Napi::Object>();
     bool isLL = object.InstanceOf(LatLng::constructor.Value());
     if (isLL) {

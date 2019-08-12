@@ -10,7 +10,7 @@ Geographic regions can be indexed by S2 cell ids of various levels in a data sto
 
 The goal of this library is to maintain node.js TypeScript bindings for the latest version of [Google's C++ S2 library](https://github.com/google/s2geometry).
 
-Other JavaScript projects are unmaintained or are implemented in pure JavaScript.
+Other JavaScript projects available on GitHub appear unmaintained.
 
 The project has been built against node's N-API, meaning that it's compatible across node.js versions.
 
@@ -40,21 +40,12 @@ const s2 = require('@radarlabs/s2');
 const loopLLs = [[40.70113825399865,-73.99229764938354],[40.70113825399865,-73.98766279220581],[40.70382234072197,-73.98766279220581],[40.70382234072197,-73.99229764938354]];
 
 # map to an array of normalized s2.LatLng
-const s2LLs = loopLLs.map(([lat, lng]) => (new s2.LatLng(lat, lng)).normalized());
-
-# create a loop
-const loop = new s2.Loop(s2LLs);
-
-# pass the loop in to a builder to generate an s2.Polygon
-const builder = new s2.Builder();
-builder.addLoop(loop);
-const polygon = builder.build();
+const s2LLs = loopLLs.map(([lat, lng]) => (new s2.LatLng(lat, lng)));
 
 # generate s2 cells to cover this polygon
 const s2level = 14;
-const coverer = new s2.RegionCoverer({ min: s2level, max: s2level });
-const covering = coverer.getCovering(polygon);
-covering.forEach(c => console.log(c.token()));
+const covering = s2.RegionCoverer.getCoveringTokens(s2LLs, { min: s2level, max: s2level });
+covering.forEach(c => console.log(c));
 
 > 89c25a31
 > 89c25a33
@@ -67,7 +58,7 @@ const pointAtLevel14 = point.parent(s2Level);
 console.log(pointAtLevel14.token());
 > 89c25a31
 
-const coveringSet = new Set(covering.map(c => c.token()));
+const coveringSet = new Set(covering);
 console.log(coveringSet.contains(pointAtLevel14.token()));
 > true
 
@@ -84,7 +75,7 @@ c1.contains(c2)
 > false
 ```
 
-For the most part, the bindings are 1:1 with the C++ classes available in Google's S2 Library. If you'd like to see other functions, feel free to open an issue or create a pull request.
+ If you'd like to see more functionality, feel free to open an issue or create a pull request.
 
 More detailed usage can be found in the [tests](https://github.com/radarlabs/s2/tree/master/test) folder.
 

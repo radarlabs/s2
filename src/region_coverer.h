@@ -4,7 +4,10 @@
 #include <napi.h>
 #include "polygon.h"
 #include "cell_id.h"
+#include "s2/s2builder.h"
 #include "s2/s2region_coverer.h"
+#include "s2/s2builderutil_s2polygon_layer.h"
+#include "s2/s2polygon.h"
 #include "s2/third_party/absl/memory/memory.h"
 
 class RegionCoverer : public Napi::ObjectWrap<RegionCoverer> {
@@ -16,10 +19,7 @@ class RegionCoverer : public Napi::ObjectWrap<RegionCoverer> {
     RegionCoverer(const Napi::CallbackInfo& info);
 
   private:
-    Napi::Value GetCovering(const Napi::CallbackInfo &info);
-
-    std::unique_ptr<S2RegionCoverer::Options> options;
-    std::unique_ptr<S2RegionCoverer> s2regioncoverer;
+    static Napi::Value GetCoveringTokens(const Napi::CallbackInfo &info);
 };
 
 #endif

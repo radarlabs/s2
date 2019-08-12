@@ -37,21 +37,6 @@ declare module '@radarlabs/s2' {
 
   }
 
-  export class Loop {
-    constructor(lls: LatLng[]);
-  }
-
-  export class Polygon {
-    constructor(encoded: ArrayBuffer);
-  }
-
-  export class Builder {
-    constructor();
-
-    public addLoop(loop: Loop): void;
-    public build(loop: Loop): Polygon | null;
-  }
-
   export interface RegionCovererOptions {
     min?: number;
     max?: number;
@@ -59,8 +44,7 @@ declare module '@radarlabs/s2' {
   }
 
   export class RegionCoverer {
-    constructor(options: RegionCovererOptions);
-    public getCovering(polygon: Polygon): CellId[] | null;
+    public getCoveringTokens(lls: LatLng[], options: RegionCovererOptions): string[] | null;
   }
 
 }
