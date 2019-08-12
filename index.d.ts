@@ -44,7 +44,7 @@ declare module '@radarlabs/s2' {
   }
 
   export class RegionCoverer {
-    public getCoveringTokens(lls: LatLng[], options: RegionCovererOptions): string[] | null;
+    public static getCoveringTokens(lls: LatLng[], options: RegionCovererOptions): string[] | null;
   }
 
 }
