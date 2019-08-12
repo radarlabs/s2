@@ -72,6 +72,8 @@ Napi::Value RegionCoverer::GetCoveringTokens(const Napi::CallbackInfo &info) {
   }
 
   S2Loop loop(vertices, S2Debug::ALLOW);
+  loop.Normalize();
+
   S2Error loopError;
   if (loop.FindValidationError(&loopError)) {
     Napi::Error::New(
