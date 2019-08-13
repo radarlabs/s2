@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/radarlabs/s2/tree/master.svg?style=svg)](https://circleci.com/gh/radarlabs/s2/tree/master)
+
 Node.js JavaScript & TypeScript bindings for [Google S2](http://s2geometry.io/).
 
 ## What is S2?
