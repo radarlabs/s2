@@ -1,4 +1,5 @@
 version: 2
+
 jobs:
   "node-8":
     docker:
@@ -64,3 +65,12 @@ jobs:
           name: Test
           command: npm run test
           when: on_success
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - "node-8"
+      - "node-10"
+      - "node-11"
+      - "node-12"
