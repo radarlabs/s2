@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/radarlabs/s2/tree/master.svg?style=svg)](https://circleci.com/gh/radarlabs/s2/tree/master)
+[![CircleCI](https://circleci.com/gh/radarlabs/s2.svg?style=svg&circle-token=ed5b9fcba959e9b786eb5e8d714f9715253e020c)](https://circleci.com/gh/radarlabs/s2)
 
 Node.js JavaScript & TypeScript bindings for [Google S2](http://s2geometry.io/).
 
