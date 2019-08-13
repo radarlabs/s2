@@ -1,12 +1,66 @@
 version: 2
 jobs:
-  build:
+  "node-8":
     docker:
-      - image: docker:17.11.0-ce-git
+      - image: circleci/node:8.16.0
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
       - run:
-          name: Build and Test
-          command: sh test.sh
+          name: Install dependencies
+          command: npm install
+      - run:
+          name: Build
+          command: PATH=$(npm bin):$PATH node-gyp rebuild
+          when: on_success
+      - run:
+          name: Test
+          command: npm run test
+          when: on_success
+  "node-10":
+    docker:
+      - image: circleci/node:10.16.2
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: npm install
+      - run:
+          name: Build
+          command: PATH=$(npm bin):$PATH node-gyp rebuild
+          when: on_success
+      - run:
+          name: Test
+          command: npm run test
+          when: on_success
+  "node-11":
+    docker:
+      - image: circleci/node:11.15.0
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: npm install
+      - run:
+          name: Build
+          command: PATH=$(npm bin):$PATH node-gyp rebuild
+          when: on_success
+      - run:
+          name: Test
+          command: npm run test
+          when: on_success
+  "node-12":
+    docker:
+      - image: circleci/node:12.8.0
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: npm install
+      - run:
+          name: Build
+          command: PATH=$(npm bin):$PATH node-gyp rebuild
+          when: on_success
+      - run:
+          name: Test
+          command: npm run test
+          when: on_success
