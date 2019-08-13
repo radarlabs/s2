@@ -7,12 +7,13 @@ jobs:
     steps:
       - checkout
       - run:
+        name: "Pull Submodules"
+        command: |
+          git submodule init
+          git submodule update --remote
+      - run:
           name: Install dependencies
           command: npm install
-      - run:
-          name: Build
-          command: PATH=$(npm bin):$PATH node-gyp rebuild
-          when: on_success
       - run:
           name: Test
           command: npm run test
@@ -23,12 +24,13 @@ jobs:
     steps:
       - checkout
       - run:
+        name: "Pull Submodules"
+        command: |
+          git submodule init
+          git submodule update --remote
+      - run:
           name: Install dependencies
           command: npm install
-      - run:
-          name: Build
-          command: PATH=$(npm bin):$PATH node-gyp rebuild
-          when: on_success
       - run:
           name: Test
           command: npm run test
@@ -39,12 +41,13 @@ jobs:
     steps:
       - checkout
       - run:
+        name: "Pull Submodules"
+        command: |
+          git submodule init
+          git submodule update --remote
+      - run:
           name: Install dependencies
           command: npm install
-      - run:
-          name: Build
-          command: PATH=$(npm bin):$PATH node-gyp rebuild
-          when: on_success
       - run:
           name: Test
           command: npm run test
@@ -55,12 +58,13 @@ jobs:
     steps:
       - checkout
       - run:
+        name: "Pull Submodules"
+        command: |
+          git submodule init
+          git submodule update --remote
+      - run:
           name: Install dependencies
           command: npm install
-      - run:
-          name: Build
-          command: PATH=$(npm bin):$PATH node-gyp rebuild
-          when: on_success
       - run:
           name: Test
           command: npm run test
