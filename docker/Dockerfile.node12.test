@@ -3,6 +3,8 @@ FROM node:12.7.0
 WORKDIR /app
 COPY . /app
 
+RUN pwd
+RUN ls
 RUN npm install
 RUN PATH=$(npm bin):$PATH node-gyp rebuild
 
