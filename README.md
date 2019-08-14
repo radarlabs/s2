@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/radarlabs/s2.svg?style=svg&circle-token=ed5b9fcba959e9b786eb5e8d714f9715253e020c)](https://circleci.com/gh/radarlabs/s2)
+
 Node.js JavaScript & TypeScript bindings for [Google S2](http://s2geometry.io/).
 
 ## What is S2?
@@ -14,7 +16,7 @@ Other JavaScript projects available on GitHub appear unmaintained.
 
 The project has been built against node's N-API, meaning that it's compatible across node.js versions.
 
-As of today, the library is built and tested run against node.js 8, 10 and 12. The library has been in production use at [Radar](radar.io) and has been built against OS X and Linux. Feel free to open an issue or PR if you'd like other platform support.
+As of today, the library is built and tested run against node.js 8-12. The library has been in production use at [Radar](radar.io) and has been built against OS X and Linux. Feel free to open an issue or PR if you'd like other platform support.
 
 See [test.sh](https://github.com/radarlabs/s2/blob/master/test.sh) for more details.
 
