@@ -2,6 +2,10 @@
 
 set -ex
 
+git submodule init
+git submodule update --remote
+
+
 # test node 10
 NODE_10_IMAGE=test10
 NODE_10_DOCKERFILE=./docker/Dockerfile.node10.test
