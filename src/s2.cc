@@ -1,5 +1,6 @@
 #include "builder.h"
 #include "cell_id.h"
+#include "cell_union.h"
 #include "latlng.h"
 #include "loop.h"
 #include "polygon.h"
@@ -11,6 +12,7 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
   LatLng::Init(env, exports);
   Loop::Init(env, exports);
   Polygon::Init(env, exports);
+  CellUnion::Init(env, exports);
   return RegionCoverer::Init(env, exports);
 }
 

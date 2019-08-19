@@ -37,6 +37,20 @@ declare module '@radarlabs/s2' {
 
   }
 
+  export class CellUnion {
+
+    public constructor(tokens: string[]);
+    public constructor(cellIds: CellId[]);
+
+    public contains(cells: CellId | CellUnion): boolean;
+    public intersects(cells: CellId | CellUnion): boolean;
+
+    public union(cells: CellUnion): CellUnion;
+    public intersection(cells: CellUnion): CellUnion;
+    public difference(cells: CellUnion): CellUnion;
+
+  }
+
   export interface RegionCovererOptions {
     min?: number;
     max?: number;
@@ -45,6 +59,7 @@ declare module '@radarlabs/s2' {
 
   export class RegionCoverer {
     public static getCoveringTokens(lls: LatLng[], options: RegionCovererOptions): string[] | null;
+    public static getCovering(lls: LatLng[], options: RegionCovererOptions): CellUnion | null;
   }
 
 }

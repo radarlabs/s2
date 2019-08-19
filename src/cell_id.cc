@@ -34,7 +34,7 @@ CellId::CellId(const Napi::CallbackInfo& info) : Napi::ObjectWrap<CellId>(info) 
 
   if (
     length <= 0
-    || (!info[0].IsString() && !info[0].IsObject())
+    || (!info[0].IsString() && !info[0].IsObject() && !info[0].IsExternal())
   ) {
     Napi::TypeError::New(env, badArgs).ThrowAsJavaScriptException();
     return;
@@ -56,6 +56,9 @@ CellId::CellId(const Napi::CallbackInfo& info) : Napi::ObjectWrap<CellId>(info) 
       Napi::TypeError::New(env, badArgs).ThrowAsJavaScriptException();
       return;
     }
+  } else if (info[0].IsExternal()) { // S2CellId C++ class
+    Napi::External<S2CellId> external = info[0].As<Napi::External<S2CellId>>();
+    this->s2cellid = *external.Data();
   }
 }
 
@@ -101,16 +104,19 @@ Napi::Value CellId::Parent(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
 
   if (s2cellid.is_face()) {
-    return FromTokenString(env, s2cellid.ToToken());
+    return info.This();
   }
 
   if (info.Length() <= 0 || !info[0].IsNumber()) {
-    return FromTokenString(env, s2cellid.parent().ToToken());
+    S2CellId parent = s2cellid.parent();
+    return constructor.New({ Napi::External<S2CellId>::New(env, &parent) });
   }
 
   int level = info[0].As<Napi::Number>().Int32Value();
   int finalLevel = level <= 0 ? 0 : level;
-  return FromTokenString(env, s2cellid.parent(finalLevel).ToToken());
+
+  S2CellId parent = s2cellid.parent(finalLevel);
+  return constructor.New({ Napi::External<S2CellId>::New(env, &parent) });
 }
 
 Napi::Value CellId::Child(const Napi::CallbackInfo &info) {
@@ -125,9 +131,9 @@ Napi::Value CellId::Child(const Napi::CallbackInfo &info) {
   S2CellId child = s2cellid.child(position.Int32Value());
 
   if (!child.is_valid()) {
-    return CellId::FromTokenString(env, s2cellid.ToToken());
+    return info.This();
   }
-  return CellId::FromTokenString(env, child.ToToken());
+  return constructor.New({ Napi::External<S2CellId>::New(env, &child) });
 }
 
 Napi::Value CellId::Next(const Napi::CallbackInfo &info) {
@@ -136,9 +142,9 @@ Napi::Value CellId::Next(const Napi::CallbackInfo &info) {
   S2CellId next = s2cellid.next();
 
   if (!next.is_valid()) {
-    return CellId::FromTokenString(env, s2cellid.ToToken());
+    return info.This();
   }
-  return CellId::FromTokenString(env, next.ToToken());
+  return constructor.New({ Napi::External<S2CellId>::New(env, &next) });
 }
 
 Napi::Value CellId::Level(const Napi::CallbackInfo &info) {
@@ -146,27 +152,19 @@ Napi::Value CellId::Level(const Napi::CallbackInfo &info) {
 }
 
 Napi::Value CellId::IsLeaf(const Napi::CallbackInfo &info) {
-  return Napi::Boolean::New(info.Env(), s2cellid.is_valid());
+  return Napi::Boolean::New(info.Env(), s2cellid.is_leaf());
 }
 
 Napi::Value CellId::FromToken(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
   if (info.Length() > 0 && info[0].IsString()) {
     Napi::String token = info[0].As<Napi::String>();
-    return CellId::FromTokenString(env, token.Utf8Value());
+    S2CellId cellId = S2CellId::FromToken(token);
+    if (cellId.is_valid()) {
+      return constructor.New({ Napi::External<S2CellId>::New(env, &cellId) });
+    }
   }
   Napi::TypeError::New(env, "(token: string) expected.").ThrowAsJavaScriptException();
-  return env.Null();
-}
-
-Napi::Value CellId::FromTokenString(const Napi::Env env, const string token) {
-  S2CellId cellId = S2CellId::FromToken(token);
-  if (cellId.is_valid()) {
-    std::ostringstream idStr;
-    idStr << cellId.id();
-    return constructor.New({ Napi::String::New(env, idStr.str()) });
-  }
-  Napi::TypeError::New(env, "Invalid token.").ThrowAsJavaScriptException();
   return env.Null();
 }
 
