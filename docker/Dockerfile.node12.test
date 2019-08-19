@@ -5,5 +5,4 @@ COPY . /app
 
 RUN npm install
 RUN PATH=$(npm bin):$PATH node-gyp rebuild
-
 CMD npm run test

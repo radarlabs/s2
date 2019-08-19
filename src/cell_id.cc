@@ -7,6 +7,7 @@ Napi::Object CellId::Init(Napi::Env env, Napi::Object exports) {
 
   Napi::Function func = DefineClass(env, "CellId", {
     InstanceMethod("id", &CellId::Id),
+    InstanceMethod("idString", &CellId::IdString),
     InstanceMethod("token", &CellId::Token),
     InstanceMethod("contains", &CellId::Contains),
     InstanceMethod("intersects", &CellId::Intersects),
@@ -30,22 +31,28 @@ CellId::CellId(const Napi::CallbackInfo& info) : Napi::ObjectWrap<CellId>(info) 
   Napi::HandleScope scope(env);
 
   int length = info.Length();
-  string badArgs = "(id: string) | (ll: LatLng) expected.";
+  string badArgs = "(id: bigint) | (token: string) | (ll: LatLng) expected.";
 
   if (
     length <= 0
-    || (!info[0].IsString() && !info[0].IsObject() && !info[0].IsExternal())
+    || (
+      !info[0].IsString()
+      && !info[0].IsObject()
+      && !info[0].IsBigInt()
+      && !info[0].IsExternal()
+    )
   ) {
     Napi::TypeError::New(env, badArgs).ThrowAsJavaScriptException();
     return;
   }
 
-  if (info[0].IsString()) {         // id: string
-    Napi::String idString = info[0].As<Napi::String>();
-    uint64_t id;
-    std::istringstream iss(idString.Utf8Value());
-    iss >> id;
-    this->s2cellid = S2CellId(id);
+  if (info[0].IsString()) {         // token: string
+    Napi::String tokenString = info[0].As<Napi::String>();
+    this->s2cellid = S2CellId::FromToken(tokenString);
+    if (!this->s2cellid.is_valid()) {
+      Napi::TypeError::New(env, "Invalid token").ThrowAsJavaScriptException();
+      return;
+    }
   } else if (info[0].IsObject()) {  // ll: s2.LatLng
     Napi::Object object = info[0].As<Napi::Object>();
     bool isLL = object.InstanceOf(LatLng::constructor.Value());
@@ -56,13 +63,29 @@ CellId::CellId(const Napi::CallbackInfo& info) : Napi::ObjectWrap<CellId>(info) 
       Napi::TypeError::New(env, badArgs).ThrowAsJavaScriptException();
       return;
     }
-  } else if (info[0].IsExternal()) { // S2CellId C++ class
+} else if (info[0].IsBigInt()) { // id: int64
+  Napi::BigInt id = info[0].As<Napi::BigInt>();
+
+  bool lossless;
+  uint64_t s2id = id.Uint64Value(&lossless);
+
+  if (lossless) {
+    this->s2cellid = S2CellId(s2id);
+  } else {
+    Napi::TypeError::New(env, "S2 ID was lossy. This might be a malformed S2 ID.").ThrowAsJavaScriptException();
+    return;
+  }
+} else if (info[0].IsExternal()) { // S2CellId C++ class
     Napi::External<S2CellId> external = info[0].As<Napi::External<S2CellId>>();
     this->s2cellid = *external.Data();
   }
 }
 
 Napi::Value CellId::Id(const Napi::CallbackInfo &info) {
+  return Napi::BigInt::New(info.Env(), (uint64_t) s2cellid.id());
+}
+
+Napi::Value CellId::IdString(const Napi::CallbackInfo &info) {
   std::ostringstream idStr;
   idStr << s2cellid.id();
   return Napi::String::New(info.Env(), idStr.str());

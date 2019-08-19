@@ -22,6 +22,7 @@ class CellId : public Napi::ObjectWrap<CellId> {
     static Napi::Value FromToken(const Napi::CallbackInfo &info);
 
     Napi::Value Id(const Napi::CallbackInfo &info);
+    Napi::Value IdString(const Napi::CallbackInfo &info);
     Napi::Value Token(const Napi::CallbackInfo &info);
 
     Napi::Value Contains(const Napi::CallbackInfo &info);

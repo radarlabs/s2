@@ -105,6 +105,7 @@
     ],
     "defines": [
       "NAPI_CPP_EXCEPTIONS",
+      "NAPI_EXPERIMENTAL", # required for bigint
       "NDEBUG",
       "NODE_ADDON_API_DISABLE_DEPRECATED"
     ],

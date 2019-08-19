@@ -17,10 +17,12 @@ declare module '@radarlabs/s2' {
 
   export class CellId {
 
-    public constructor(id: string);
+    public constructor(id: bigint);
+    public constructor(token: string);
     public constructor(ll: LatLng);
 
-    public id(): string;
+    public id(): bigint;
+    public idString(): string;
     public token(): string;
 
     public contains(other: CellId): boolean;
