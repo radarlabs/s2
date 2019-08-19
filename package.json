@@ -4,6 +4,10 @@
   "description": "Node.js JavaScript bindings for Google S2",
   "main": "index.js",
   "types": "index.d.ts",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/radarlabs/s2.git"
+  },
   "scripts": {
     "test": "jest --logHeapUsage --verbose"
   },
