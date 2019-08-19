@@ -49,6 +49,9 @@ declare module '@radarlabs/s2' {
     public intersection(cells: CellUnion): CellUnion;
     public difference(cells: CellUnion): CellUnion;
 
+    public cellIds(): CellId[];
+    public tokens(): string[];
+
   }
 
   export interface RegionCovererOptions {
