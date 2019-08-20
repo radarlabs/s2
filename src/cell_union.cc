@@ -11,6 +11,7 @@ Napi::Object CellUnion::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("union", &CellUnion::Union),
     InstanceMethod("intersection", &CellUnion::Intersection),
     InstanceMethod("difference", &CellUnion::Difference),
+    InstanceMethod("ids", &CellUnion::Ids),
     InstanceMethod("cellIds", &CellUnion::CellIds),
     InstanceMethod("tokens", &CellUnion::Tokens),
   });
@@ -192,6 +193,20 @@ Napi::Value CellUnion::Difference(const Napi::CallbackInfo &info) {
   return constructor.New({
     Napi::External<S2CellUnion>::New(env, &s2Difference)
   });
+}
+
+Napi::Value CellUnion::Ids(const Napi::CallbackInfo &info) {
+  const Napi::Env env = info.Env();
+
+  uint32_t size = this->s2cellunion.size();
+  Napi::BigUint64Array returnedIds = Napi::BigUint64Array::New(env, size);
+
+  for (uint32_t i = 0; i < size; i++) {
+    S2CellId cellId = this->s2cellunion[i];
+    returnedIds[i] = cellId.id();
+  }
+
+  return returnedIds;
 }
 
 Napi::Value CellUnion::CellIds(const Napi::CallbackInfo &info) {

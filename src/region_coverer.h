@@ -21,6 +21,7 @@ class RegionCoverer : public Napi::ObjectWrap<RegionCoverer> {
     RegionCoverer(const Napi::CallbackInfo& info);
 
   private:
+    static Napi::Value GetCoveringIds(const Napi::CallbackInfo &info);
     static Napi::Value GetCoveringTokens(const Napi::CallbackInfo &info);
     static Napi::Value GetCoveringCellUnion(const Napi::CallbackInfo &info);
 
