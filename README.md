@@ -82,6 +82,12 @@ c1.contains(c2)
 
 More detailed usage can be found in the [tests](https://github.com/radarlabs/s2/tree/master/test) folder.
 
+## Versioning
+
+The Node S2 is library is at its infancy (version 0.0.1), so APIs are likely to change.
+In order to help with versioning, we publish TypeScript bindings so that your compiler can check
+if anything has changed. To keep up with updates, see [CHANGELOG.md](https://github.com/radarlabs/s2/blob/master/CHANGELOG.md)
+
 ## Resources
 
 - [A detailed explanation on the S2 library](http://s2geometry.io/)
