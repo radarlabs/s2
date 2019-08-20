@@ -25,6 +25,7 @@ class CellUnion : public Napi::ObjectWrap<CellUnion> {
     Napi::Value Intersection(const Napi::CallbackInfo &info);
     Napi::Value Difference(const Napi::CallbackInfo &info);
 
+    Napi::Value Ids(const Napi::CallbackInfo &info);
     Napi::Value CellIds(const Napi::CallbackInfo &info);
     Napi::Value Tokens(const Napi::CallbackInfo &info);
 

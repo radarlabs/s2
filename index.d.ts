@@ -51,6 +51,7 @@ declare module '@radarlabs/s2' {
     public intersection(cells: CellUnion): CellUnion;
     public difference(cells: CellUnion): CellUnion;
 
+    public ids(): BigUint64Array;
     public cellIds(): CellId[];
     public tokens(): string[];
 
@@ -63,6 +64,7 @@ declare module '@radarlabs/s2' {
   }
 
   export class RegionCoverer {
+    public static getCoveringIds(lls: LatLng[], options: RegionCovererOptions): BigUint64Array | null;
     public static getCoveringTokens(lls: LatLng[], options: RegionCovererOptions): string[] | null;
     public static getCovering(lls: LatLng[], options: RegionCovererOptions): CellUnion | null;
   }

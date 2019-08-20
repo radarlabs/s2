@@ -9,6 +9,7 @@ Napi::Object RegionCoverer::Init(Napi::Env env, Napi::Object exports) {
 
   Napi::Function func = DefineClass(env, "RegionCoverer", {
     StaticMethod("getCovering", &RegionCoverer::GetCoveringCellUnion),
+    StaticMethod("getCoveringIds", &RegionCoverer::GetCoveringIds),
     StaticMethod("getCoveringTokens", &RegionCoverer::GetCoveringTokens),
   });
 
@@ -22,6 +23,106 @@ Napi::Object RegionCoverer::Init(Napi::Env env, Napi::Object exports) {
 RegionCoverer::RegionCoverer(const Napi::CallbackInfo& info) : Napi::ObjectWrap<RegionCoverer>(info) {
   Napi::Env env = info.Env();
   Napi::HandleScope scope(env);
+}
+
+Napi::Value RegionCoverer::GetCoveringIds(const Napi::CallbackInfo &info) {
+  Napi::Env env = info.Env();
+
+  int length = info.Length();
+  string badArgs = "(latlngs: s2.LatLng[], options: { min?: number, max?: number, max_cells?: number }) expected.";
+
+  if (length <= 1 || !info[0].IsArray() || !info[1].IsObject()) {
+    Napi::TypeError::New(env, badArgs).ThrowAsJavaScriptException();
+    return env.Null();
+  }
+
+  Napi::Array llArray = info[0].As<Napi::Array>();
+  uint32_t arrayLength = llArray.Length();
+  if (arrayLength <= 0) {
+    Napi::TypeError::New(env, "(latlngs: s2.LatLng[]) was empty.").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+
+  Napi::Object optionsObject = info[1].As<Napi::Object>();
+
+  Napi::Value minLevelRaw = optionsObject["min"];
+  Napi::Value maxLevelRaw = optionsObject["max"];
+  Napi::Value maxCellsRaw = optionsObject["max_cells"];
+
+  S2RegionCoverer::Options options;
+  if (minLevelRaw.IsNumber()) {
+    options.set_min_level(minLevelRaw.As<Napi::Number>().Uint32Value());
+  }
+  if (maxLevelRaw.IsNumber()) {
+    options.set_max_level(maxLevelRaw.As<Napi::Number>().Uint32Value());
+  }
+  if (maxCellsRaw.IsNumber()) {
+    options.set_max_cells(maxCellsRaw.As<Napi::Number>().Uint32Value());
+  }
+
+  std::vector<S2Point> vertices;
+  for (uint32_t i = 0; i < arrayLength; i++) {
+    Napi::Value obj = llArray[i];
+    if (obj.IsObject()) {
+      LatLng* ll = LatLng::Unwrap(obj.As<Napi::Object>());
+      S2Point point = ll->Get().Normalized().ToPoint().Normalize();
+      vertices.push_back(point);
+    } else {
+      Napi::TypeError::New(env, badArgs).ThrowAsJavaScriptException();
+      return env.Null();
+    }
+  }
+
+  S2Error loopError;
+  S2Error buildError;
+  S2Error outputError;
+
+  S2CellUnion covering = GetCovering(
+    env,
+    vertices,
+    options,
+    loopError,
+    buildError,
+    outputError
+  );
+
+  if (!loopError.ok()) {
+    Napi::Error::New(
+      env,
+      StringPrintf("Loop is invalid: %d %s", loopError.code(), loopError.text().c_str())
+    ).ThrowAsJavaScriptException();
+    return env.Null();
+  }
+
+  if (!buildError.ok()) {
+    Napi::Error::New(
+      env,
+      StringPrintf("Build failed: %d %s", buildError.code(), buildError.text().c_str())
+    ).ThrowAsJavaScriptException();
+    return env.Null();
+  }
+
+  if (!outputError.ok()) {
+    Napi::Error::New(
+      env,
+      StringPrintf("Output is invalid: %d %s", outputError.code(), outputError.text().c_str())
+    ).ThrowAsJavaScriptException();
+    return env.Null();
+  }
+
+  if (!covering.IsValid()) {
+    Napi::Error::New(env, "Covering is invalid").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+
+  uint32_t size = covering.size();
+  Napi::BigUint64Array returnedIds = Napi::BigUint64Array::New(env, size);
+
+  for (uint32_t i = 0; i < size; i++) {
+    returnedIds[i] = covering[i].id();
+  }
+
+  return returnedIds;
 }
 
 Napi::Value RegionCoverer::GetCoveringTokens(const Napi::CallbackInfo &info) {

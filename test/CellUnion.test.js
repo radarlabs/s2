@@ -7,6 +7,19 @@ const tokens = [
   '89c25ecc', '89c25ed4'
 ];
 
+const ids = [
+  9926594475407179776n,
+  9926594483997114368n,
+  9926594492587048960n,
+  9926594591371296768n,
+  9926594728810250240n,
+  9926594831621029888n,
+  9926594849069334528n,
+  9926600655865118720n,
+  9926600758944333824n,
+  9926600793304072192n,
+];
+
 test("CellUnion#constructor works", () => {
   const cellIds = tokens.map(t => s2.CellId.fromToken(t));
 
@@ -17,6 +30,8 @@ test("CellUnion#constructor works", () => {
   expect(new Set(cu2.tokens())).toEqual(new Set(tokens)) ;
   expect(new Set(cu1.cellIds().map(id => id.token()))).toEqual(new Set(tokens)) ;
   expect(new Set(cu2.cellIds().map(id => id.token()))).toEqual(new Set(tokens)) ;
+  expect(new Set(cu1.ids())).toEqual(new Set(ids)) ;
+  expect(new Set(cu2.ids())).toEqual(new Set(ids)) ;
 });
 
 test("CellUnion#contains works", () => {

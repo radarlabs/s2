@@ -162,3 +162,76 @@ test("RegionCoverer#getCovering works", () => {
   expect(coveringTokens).toEqual(expectedTokens);
   expect(new Set(coveringCellIds.map(id => id.token()))).toEqual(expectedTokens);
 });
+
+test("RegionCoverer#getCoveringIds works", () => {
+  const lls = postalCode11201.map((latlng) => {
+    const [lng, lat] = latlng;
+    return new s2.LatLng(lat, lng);
+  });
+
+  // Invalid loop with duplicate points (first and last are the same)
+  expect(() => new s2.RegionCoverer.getCoveringIds(null, {})).toThrow('s2.LatLng[]');
+  expect(() => new s2.RegionCoverer.getCoveringIds([], {})).toThrow('was empty');
+  expect(() => new s2.RegionCoverer.getCoveringIds(lls, {})).toThrow('duplicate vertex');
+
+  // level-14 s2 cells
+  let covering =
+    s2.RegionCoverer
+      .getCoveringIds(lls.slice(1), { min: 14, max: 14 })
+      .sort();
+
+  let expectedIds = BigUint64Array.of(
+    9926595695177891840n,
+    9926595703767826432n,
+    9926595798257106944n,
+    9926595806847041536n,
+    9926595815436976128n,
+    9926595824026910720n,
+    9926595832616845312n,
+    9926595841206779904n,
+    9926595875566518272n,
+    9926595884156452864n,
+    9926595927106125824n,
+    9926597344445333504n,
+    9926595712357761024n,
+    9926597353035268096n,
+    9926597361625202688n,
+    9926597370215137280n,
+    9926597456114483200n,
+    9926597464704417792n,
+    9926597490474221568n,
+    9926595720947695616n,
+    9926595729537630208n,
+    9926595738127564800n,
+    9926595763897368576n,
+    9926595772487303168n,
+    9926595781077237760n,
+    9926595789667172352n
+  ).sort();
+
+  for (let i = 0; i < expectedIds.length; i++) {
+    expect(covering[i]).toEqual(expectedIds[i]);
+  }
+
+  // levels 12-20
+  covering =
+    s2.RegionCoverer
+      .getCoveringIds(lls.slice(1), { min: 12, max: 20 })
+      .sort();
+
+  expectedIds = BigUint64Array.of(
+    9926595708062793728n,
+    9926595742422532096n,
+    9926595828321878016n,
+    9926595928179867648n,
+    9926597357330235392n,
+    9926597456114483200n,
+    9926597464704417792n,
+    9926597490474221568n,
+  ).sort();
+
+  for (let i = 0; i < expectedIds.length; i++) {
+    expect(covering[i]).toEqual(expectedIds[i]);
+  }
+
+});
