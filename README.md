@@ -10,13 +10,14 @@ Geographic regions can be indexed by S2 cell ids of various levels in a data sto
 
 ## The Library
 
-The goal of this library is to maintain node.js TypeScript bindings for the latest version of [Google's C++ S2 library](https://github.com/google/s2geometry).
+The goal of this library is to maintain Node.js TypeScript bindings for the latest version of [Google's C++ S2 library](https://github.com/google/s2geometry).
 
 Other JavaScript projects available on GitHub appear unmaintained.
 
-The project has been built against node's N-API, meaning that it's compatible across node.js versions.
+The project has been built against Node's N-API, meaning that it's compatible across Node.js versions that support BigInt.
+This means that Node.js version 9 and below are unsupported.
 
-As of today, the library is built and tested run against node.js 8-12. The library has been in production use at [Radar](radar.io) and has been built against OS X and Linux. Feel free to open an issue or PR if you'd like other platform support.
+As of today, the library is built and tested against Node.js 10-12. The library has been in production use at [Radar](https://radar.io) and has been built against OS X and Linux. Feel free to open an issue or PR if you'd like other platform support.
 
 See [test.sh](https://github.com/radarlabs/s2/blob/master/test.sh) for more details.
 
@@ -31,6 +32,21 @@ npm install @radarlabs/s2
 To run tests (you'll need Docker):
 ```
 ./test.sh
+```
+
+S2 Cells can be generated from BigInt S2 IDs or string tokens:
+
+```
+const s2 = require('@radarlabs/s2');
+
+const cell1 = new s2.CellId(9926595695177891840n);
+console.log(cell1.token());
+> 89c25a31
+
+const cell2 = new s2.CellId('89c25a31');
+console.log(cell2.id());
+> 9926595695177891840n
+
 ```
 
 To generate a covering for a given area:
@@ -80,6 +96,12 @@ c1.contains(c2)
  If you'd like to see more functionality, feel free to open an issue or create a pull request.
 
 More detailed usage can be found in the [tests](https://github.com/radarlabs/s2/tree/master/test) folder.
+
+## Versioning
+
+The Node S2 is library is at its infancy (version 0.0.1), so APIs are likely to change.
+In order to help with versioning, we publish TypeScript bindings so that your compiler can check
+if anything has changed. To keep up with updates, see [CHANGELOG.md](https://github.com/radarlabs/s2/blob/master/CHANGELOG.md)
 
 ## Resources
 

@@ -70,7 +70,6 @@ test("RegionCoverer#getCoveringTokens works", () => {
     '89c25bcd',
     '89c25bd3'
   ]));
-
 });
 
 test("RegionCoverer can cover unnormalized loops", () => {
@@ -94,5 +93,145 @@ test("RegionCoverer can cover unnormalized loops", () => {
   ]);
 
   expect(coveringTokens).toEqual(expectedTokens);
+
+});
+
+test("RegionCoverer#getCovering works", () => {
+  const lls = postalCode11201.map((latlng) => {
+    const [lng, lat] = latlng;
+    return new s2.LatLng(lat, lng);
+  });
+
+  // Invalid loop with duplicate points (first and last are the same)
+  expect(() => new s2.RegionCoverer.getCovering(null, {})).toThrow('s2.LatLng[]');
+  expect(() => new s2.RegionCoverer.getCovering([], {})).toThrow('was empty');
+  expect(() => new s2.RegionCoverer.getCovering(lls, {})).toThrow('duplicate vertex');
+
+  // level-14 s2 cells
+  let covering = s2.RegionCoverer.getCovering(lls.slice(1), { min: 14, max: 14 });
+  let coveringCellIds = covering.cellIds();
+  let coveringTokens = new Set(covering.tokens());
+  let expectedTokens = new Set([
+    '89c25a31',
+    '89c25a33',
+    '89c25a35',
+    '89c25a37',
+    '89c25a39',
+    '89c25a3b',
+    '89c25a41',
+    '89c25a43',
+    '89c25a45',
+    '89c25a47',
+    '89c25a49',
+    '89c25a4b',
+    '89c25a4d',
+    '89c25a4f',
+    '89c25a51',
+    '89c25a53',
+    '89c25a5b',
+    '89c25a5d',
+    '89c25a67',
+    '89c25bb1',
+    '89c25bb3',
+    '89c25bb5',
+    '89c25bb7',
+    '89c25bcb',
+    '89c25bcd',
+    '89c25bd3'
+  ]);
+
+  expect(coveringTokens).toEqual(expectedTokens);
+  expect(new Set(coveringCellIds.map(id => id.token()))).toEqual(expectedTokens);
+
+  // levels 12-20
+  covering = s2.RegionCoverer.getCovering(lls.slice(1), { min: 12, max: 20 });
+  coveringCellIds = covering.cellIds();
+  coveringTokens = new Set(covering.tokens());
+
+  expectedTokens = new Set([
+    '89c25a34',
+    '89c25a3c',
+    '89c25a5',
+    '89c25a674',
+    '89c25bb4',
+    '89c25bcb',
+    '89c25bcd',
+    '89c25bd3'
+  ]);
+
+  expect(coveringTokens).toEqual(expectedTokens);
+  expect(new Set(coveringCellIds.map(id => id.token()))).toEqual(expectedTokens);
+});
+
+test("RegionCoverer#getCoveringIds works", () => {
+  const lls = postalCode11201.map((latlng) => {
+    const [lng, lat] = latlng;
+    return new s2.LatLng(lat, lng);
+  });
+
+  // Invalid loop with duplicate points (first and last are the same)
+  expect(() => new s2.RegionCoverer.getCoveringIds(null, {})).toThrow('s2.LatLng[]');
+  expect(() => new s2.RegionCoverer.getCoveringIds([], {})).toThrow('was empty');
+  expect(() => new s2.RegionCoverer.getCoveringIds(lls, {})).toThrow('duplicate vertex');
+
+  // level-14 s2 cells
+  let covering =
+    s2.RegionCoverer
+      .getCoveringIds(lls.slice(1), { min: 14, max: 14 })
+      .sort();
+
+  let expectedIds = BigUint64Array.of(
+    9926595695177891840n,
+    9926595703767826432n,
+    9926595798257106944n,
+    9926595806847041536n,
+    9926595815436976128n,
+    9926595824026910720n,
+    9926595832616845312n,
+    9926595841206779904n,
+    9926595875566518272n,
+    9926595884156452864n,
+    9926595927106125824n,
+    9926597344445333504n,
+    9926595712357761024n,
+    9926597353035268096n,
+    9926597361625202688n,
+    9926597370215137280n,
+    9926597456114483200n,
+    9926597464704417792n,
+    9926597490474221568n,
+    9926595720947695616n,
+    9926595729537630208n,
+    9926595738127564800n,
+    9926595763897368576n,
+    9926595772487303168n,
+    9926595781077237760n,
+    9926595789667172352n
+  ).sort();
+
+  for (let i = 0; i < expectedIds.length; i++) {
+    expect(covering[i]).toEqual(expectedIds[i]);
+  }
+
+  // levels 12-20
+  covering =
+    s2.RegionCoverer
+      .getCoveringIds(lls.slice(1), { min: 12, max: 20 })
+      .sort();
+
+  expectedIds = BigUint64Array.of(
+    9926595708062793728n,
+    9926595742422532096n,
+    9926595828321878016n,
+    9926595928179867648n,
+    9926597357330235392n,
+    9926597456114483200n,
+    9926597464704417792n,
+    9926597490474221568n,
+  ).sort();
+
+  for (let i = 0; i < expectedIds.length; i++) {
+    expect(covering[i]).toEqual(expectedIds[i]);
+  }
 
 });

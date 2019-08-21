@@ -2,15 +2,19 @@
 
 set -ex
 
-# test node 8
-NODE_8_IMAGE=test8
-NODE_8_DOCKERFILE=./docker/Dockerfile.node8.test
-docker build -t $NODE_8_IMAGE -f $NODE_8_DOCKERFILE . && docker run $NODE_8_IMAGE:latest
+git submodule init
+git submodule update --remote
+
 
 # test node 10
 NODE_10_IMAGE=test10
 NODE_10_DOCKERFILE=./docker/Dockerfile.node10.test
 docker build -t $NODE_10_IMAGE -f ./docker/Dockerfile.node10.test . && docker run $NODE_10_IMAGE:latest
+
+# test node 11
+NODE_11_IMAGE=test11
+NODE_11_DOCKERFILE=./docker/Dockerfile.node11.test
+docker build -t $NODE_11_IMAGE -f $NODE_11_DOCKERFILE . && docker run $NODE_11_IMAGE:latest
 
 # test node 12
 NODE_12_IMAGE=test12

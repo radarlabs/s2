@@ -10,6 +10,7 @@
       "./src/loop.cc",
       "./src/polygon.cc",
       "./src/region_coverer.cc",
+      "./src/cell_union.cc",
 
       "./third_party/s2geometry/src/s2/base/stringprintf.cc",
       "./third_party/s2geometry/src/s2/third_party/absl/strings/ascii.cc",
@@ -104,6 +105,7 @@
     ],
     "defines": [
       "NAPI_CPP_EXCEPTIONS",
+      "NAPI_EXPERIMENTAL", # required for bigint
       "NDEBUG",
       "NODE_ADDON_API_DISABLE_DEPRECATED"
     ],
