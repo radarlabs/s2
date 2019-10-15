@@ -235,3 +235,63 @@ test("RegionCoverer#getCoveringIds works", () => {
   }
 
 });
+
+test("RegionCoverer#getRadiusCovering works", () => {
+  const dumbo = [40.7033, -73.9881];
+  const ll = new s2.LatLng(...dumbo);
+
+  const cellUnion = s2.RegionCoverer.getRadiusCovering(ll, 3000, { min: 5, max: 20 });
+  const ids = cellUnion.ids().sort();
+  const expected = [
+    9926594780349857792n,
+    9926594866249203712n,
+    9926595003688157184n,
+    9926595433184886784n,
+    9926595759602401280n,
+    9926596532696514560n,
+    9926596567056252928n,
+    9926597408869842944n,
+  ].sort();
+
+  for (let i = 0; i < expected.length; i++) {
+    expect(ids[i]).toEqual(expected[i]);
+  }
+});
+
+test("RegionCoverer#getRadiusCoveringIds works", () => {
+  const dumbo = [40.7033, -73.9881];
+  const ll = new s2.LatLng(...dumbo);
+
+  const ids = s2.RegionCoverer.getRadiusCoveringIds(ll, 3000, { min: 5, max: 20 }).sort();
+  const expected = [
+    9926594780349857792n,
+    9926594866249203712n,
+    9926595003688157184n,
+    9926595433184886784n,
+    9926595759602401280n,
+    9926596532696514560n,
+    9926596567056252928n,
+    9926597408869842944n,
+  ].sort();
+
+  for (let i = 0; i < expected.length; i++) {
+    expect(ids[i]).toEqual(expected[i]);
+  }
+});
+
+test("RegionCoverer#getRadiusCoveringTokens works", () => {
+  const dumbo = [40.7033, -73.9881];
+  const ll = new s2.LatLng(...dumbo);
+
+  const tokens = s2.RegionCoverer.getRadiusCoveringTokens(ll, 1000, { min: 12, max: 12 }).sort();
+  const expected = [
+    '89c25a3',
+    '89c25a5',
+    '89c25bb',
+    '89c25bd',
+  ].sort();
+
+  for (let i = 0; i < expected.length; i++) {
+    expect(tokens[i]).toEqual(expected[i]);
+  }
+});

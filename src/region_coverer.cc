@@ -11,6 +11,10 @@ Napi::Object RegionCoverer::Init(Napi::Env env, Napi::Object exports) {
     StaticMethod("getCovering", &RegionCoverer::GetCoveringCellUnion),
     StaticMethod("getCoveringIds", &RegionCoverer::GetCoveringIds),
     StaticMethod("getCoveringTokens", &RegionCoverer::GetCoveringTokens),
+
+    StaticMethod("getRadiusCovering", &RegionCoverer::GetRadiusCoveringCellUnion),
+    StaticMethod("getRadiusCoveringIds", &RegionCoverer::GetRadiusCoveringIds),
+    StaticMethod("getRadiusCoveringTokens", &RegionCoverer::GetRadiusCoveringTokens),
   });
 
   constructor = Napi::Persistent(func);
@@ -44,21 +48,8 @@ Napi::Value RegionCoverer::GetCoveringIds(const Napi::CallbackInfo &info) {
   }
 
   Napi::Object optionsObject = info[1].As<Napi::Object>();
-
-  Napi::Value minLevelRaw = optionsObject["min"];
-  Napi::Value maxLevelRaw = optionsObject["max"];
-  Napi::Value maxCellsRaw = optionsObject["max_cells"];
-
   S2RegionCoverer::Options options;
-  if (minLevelRaw.IsNumber()) {
-    options.set_min_level(minLevelRaw.As<Napi::Number>().Uint32Value());
-  }
-  if (maxLevelRaw.IsNumber()) {
-    options.set_max_level(maxLevelRaw.As<Napi::Number>().Uint32Value());
-  }
-  if (maxCellsRaw.IsNumber()) {
-    options.set_max_cells(maxCellsRaw.As<Napi::Number>().Uint32Value());
-  }
+  GetS2Options(optionsObject, options);
 
   std::vector<S2Point> vertices;
   for (uint32_t i = 0; i < arrayLength; i++) {
@@ -144,21 +135,8 @@ Napi::Value RegionCoverer::GetCoveringTokens(const Napi::CallbackInfo &info) {
   }
 
   Napi::Object optionsObject = info[1].As<Napi::Object>();
-
-  Napi::Value minLevelRaw = optionsObject["min"];
-  Napi::Value maxLevelRaw = optionsObject["max"];
-  Napi::Value maxCellsRaw = optionsObject["max_cells"];
-
   S2RegionCoverer::Options options;
-  if (minLevelRaw.IsNumber()) {
-    options.set_min_level(minLevelRaw.As<Napi::Number>().Uint32Value());
-  }
-  if (maxLevelRaw.IsNumber()) {
-    options.set_max_level(maxLevelRaw.As<Napi::Number>().Uint32Value());
-  }
-  if (maxCellsRaw.IsNumber()) {
-    options.set_max_cells(maxCellsRaw.As<Napi::Number>().Uint32Value());
-  }
+  GetS2Options(optionsObject, options);
 
   std::vector<S2Point> vertices;
   for (uint32_t i = 0; i < arrayLength; i++) {
@@ -244,21 +222,8 @@ Napi::Value RegionCoverer::GetCoveringCellUnion(const Napi::CallbackInfo &info) 
   }
 
   Napi::Object optionsObject = info[1].As<Napi::Object>();
-
-  Napi::Value minLevelRaw = optionsObject["min"];
-  Napi::Value maxLevelRaw = optionsObject["max"];
-  Napi::Value maxCellsRaw = optionsObject["max_cells"];
-
   S2RegionCoverer::Options options;
-  if (minLevelRaw.IsNumber()) {
-    options.set_min_level(minLevelRaw.As<Napi::Number>().Uint32Value());
-  }
-  if (maxLevelRaw.IsNumber()) {
-    options.set_max_level(maxLevelRaw.As<Napi::Number>().Uint32Value());
-  }
-  if (maxCellsRaw.IsNumber()) {
-    options.set_max_cells(maxCellsRaw.As<Napi::Number>().Uint32Value());
-  }
+  GetS2Options(optionsObject, options);
 
   std::vector<S2Point> vertices;
   for (uint32_t i = 0; i < arrayLength; i++) {
@@ -320,6 +285,124 @@ Napi::Value RegionCoverer::GetCoveringCellUnion(const Napi::CallbackInfo &info) 
   });
 }
 
+Napi::Value RegionCoverer::GetRadiusCoveringTokens(const Napi::CallbackInfo &info) {
+  Napi::Env env = info.Env();
+
+  int length = info.Length();
+  string badArgs = "(latlng: s2.LatLng, radiusM: number, options: { min?: number, max?: number, max_cells?: number }) expected.";
+
+  if (
+    length < 3
+    || !info[0].IsObject()
+    || !info[1].IsNumber()
+    || !info[2].IsObject()
+  ) {
+    Napi::TypeError::New(env, badArgs).ThrowAsJavaScriptException();
+    return env.Null();
+  }
+
+  Napi::Object optionsObject = info[2].As<Napi::Object>();
+  S2RegionCoverer::Options options;
+  GetS2Options(optionsObject, options);
+
+  LatLng* ll = LatLng::Unwrap(info[0].As<Napi::Object>());
+  double radiusM = info[1].As<Napi::Number>().DoubleValue();
+
+  S2CellUnion covering = GetRadiusCovering(ll, radiusM, options);
+
+  uint32_t size = covering.size();
+  Napi::Array returnedIds = Napi::Array::New(env, size);
+
+  for (uint32_t i = 0; i < size; i++) {
+    returnedIds[i] = Napi::String::New(env, covering[i].ToToken());
+  }
+
+  return returnedIds;
+}
+
+Napi::Value RegionCoverer::GetRadiusCoveringIds(const Napi::CallbackInfo &info) {
+  Napi::Env env = info.Env();
+
+  int length = info.Length();
+  string badArgs = "(latlng: s2.LatLng, radiusM: number, options: { min?: number, max?: number, max_cells?: number }) expected.";
+
+  if (
+    length < 3
+    || !info[0].IsObject()
+    || !info[1].IsNumber()
+    || !info[2].IsObject()
+  ) {
+    Napi::TypeError::New(env, badArgs).ThrowAsJavaScriptException();
+    return env.Null();
+  }
+
+  Napi::Object optionsObject = info[2].As<Napi::Object>();
+  S2RegionCoverer::Options options;
+  GetS2Options(optionsObject, options);
+
+  LatLng* ll = LatLng::Unwrap(info[0].As<Napi::Object>());
+  double radiusM = info[1].As<Napi::Number>().DoubleValue();
+
+  S2CellUnion covering = GetRadiusCovering(ll, radiusM, options);
+
+  uint32_t size = covering.size();
+  Napi::BigUint64Array returnedIds = Napi::BigUint64Array::New(env, size);
+
+  for (uint32_t i = 0; i < size; i++) {
+    returnedIds[i] = covering[i].id();
+  }
+
+  return returnedIds;
+}
+
+Napi::Value RegionCoverer::GetRadiusCoveringCellUnion(const Napi::CallbackInfo &info) {
+  Napi::Env env = info.Env();
+
+  int length = info.Length();
+  string badArgs = "(latlng: s2.LatLng, radiusM: number, options: { min?: number, max?: number, max_cells?: number }) expected.";
+
+  if (
+    length < 3
+    || !info[0].IsObject()
+    || !info[1].IsNumber()
+    || !info[2].IsObject()
+  ) {
+    Napi::TypeError::New(env, badArgs).ThrowAsJavaScriptException();
+    return env.Null();
+  }
+
+  Napi::Object optionsObject = info[2].As<Napi::Object>();
+  S2RegionCoverer::Options options;
+  GetS2Options(optionsObject, options);
+
+  LatLng* ll = LatLng::Unwrap(info[0].As<Napi::Object>());
+  double radiusM = info[1].As<Napi::Number>().DoubleValue();
+
+  S2CellUnion covering = GetRadiusCovering(ll, radiusM, options);
+  return CellUnion::constructor.New({
+    Napi::External<S2CellUnion>::New(env, &covering)
+  });
+}
+
+void RegionCoverer::GetS2Options(
+  Napi::Object optionsObject,
+  S2RegionCoverer::Options &options
+) {
+  Napi::Value minLevelRaw = optionsObject["min"];
+  Napi::Value maxLevelRaw = optionsObject["max"];
+  Napi::Value maxCellsRaw = optionsObject["max_cells"];
+
+  if (minLevelRaw.IsNumber()) {
+    options.set_min_level(minLevelRaw.As<Napi::Number>().Uint32Value());
+  }
+  if (maxLevelRaw.IsNumber()) {
+    options.set_max_level(maxLevelRaw.As<Napi::Number>().Uint32Value());
+  }
+  if (maxCellsRaw.IsNumber()) {
+    options.set_max_cells(maxCellsRaw.As<Napi::Number>().Uint32Value());
+  }
+}
+
 S2CellUnion RegionCoverer::GetCovering(
   Napi::Env env,
   std::vector<S2Point> &vertices,
@@ -349,4 +432,19 @@ S2CellUnion RegionCoverer::GetCovering(
 
   S2RegionCoverer coverer(coverOptions);
   return coverer.GetCovering(output);
+}
+
+S2CellUnion RegionCoverer::GetRadiusCovering(
+  LatLng* ll,
+  double radiusM,
+  S2RegionCoverer::Options &coverOptions
+) {
+  S2Point point = ll->Get().Normalized().ToPoint().Normalize();
+  S1Angle angle = S1Angle::Radians(S2Earth::MetersToRadians(radiusM));
+  S2Cap s2cap(point, angle);
+  if (!s2cap.is_valid()) {
+    return S2CellUnion();
+  }
+  S2RegionCoverer coverer(coverOptions);
+  return coverer.GetCovering(s2cap);
 }

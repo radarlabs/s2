@@ -67,6 +67,10 @@ declare module '@radarlabs/s2' {
     public static getCoveringIds(lls: LatLng[], options: RegionCovererOptions): BigUint64Array | null;
     public static getCoveringTokens(lls: LatLng[], options: RegionCovererOptions): string[] | null;
     public static getCovering(lls: LatLng[], options: RegionCovererOptions): CellUnion | null;
+
+    public static getRadiusCoveringIds(ll: LatLng, radiusM: number, options: RegionCovererOptions): BigUint64Array | null;
+    public static getRadiusCoveringTokens(ll: LatLng, radiusM: number, options: RegionCovererOptions): string[] | null;
+    public static getRadiusCovering(ll: LatLng, radiusM: number, options: RegionCovererOptions): CellUnion | null;
   }
 
 }
