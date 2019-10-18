@@ -5,6 +5,7 @@
       "./src/s2.cc",
 
       "./src/builder.cc",
+      "./src/cell.cc",
       "./src/cell_id.cc",
       "./src/latlng.cc",
       "./src/loop.cc",
