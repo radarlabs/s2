@@ -2,6 +2,7 @@
 #define RADAR_LATLNG
 
 #include <napi.h>
+#include "point.h"
 #include "s2/s2latlng.h"
 
 class LatLng : public Napi::ObjectWrap<LatLng> {

@@ -6,8 +6,8 @@
 
 #include "cell_id.h"
 #include "latlng.h"
+#include "point.h"
 #include "s2/s2cell.h"
-#include "s2/s2latlng.h"
 
 class Cell : public Napi::ObjectWrap<Cell> {
   public:

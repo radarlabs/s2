@@ -49,12 +49,10 @@ Napi::Value Cell::GetVertex(const Napi::CallbackInfo &info) {
 
   Napi::Number vertex = info[0].As<Napi::Number>();
   S2Point point = s2Cell.GetVertex(vertex);
-  S2LatLng latlng = S2LatLng(point);
 
-  return LatLng::NewInstance(
-    Napi::Number::New(env, latlng.lat().degrees()),
-    Napi::Number::New(env, latlng.lng().degrees())
-  );
+  return Point::constructor.New({
+    Napi::External<S2Point>::New(env, &point)
+  });
 }
 
 S2Cell Cell::Get() {

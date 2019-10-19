@@ -2,6 +2,12 @@ const s2 = require('bindings')('s2');
 
 const tokyoTower = [35.6586, 139.7454];
 
+test("LatLng#constructor accepts Point", () => {
+  const point = new s2.Point(-0.6193073896908822, 0.5249960533039503, 0.5838128990434704);
+  const ll = new s2.LatLng(point);
+  expect(ll.toString()).toEqual('35.719171,139.711561');
+});
+
 test("LatLng#latitude works", () => {
   const ll = new s2.LatLng(...tokyoTower);
   expect(ll.latitude()).toBe(35.6586);

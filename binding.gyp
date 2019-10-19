@@ -9,6 +9,7 @@
       "./src/cell_id.cc",
       "./src/latlng.cc",
       "./src/loop.cc",
+      "./src/point.cc",
       "./src/polygon.cc",
       "./src/region_coverer.cc",
       "./src/cell_union.cc",
