@@ -25,7 +25,7 @@ Point::Point(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Point>(info) {
   int length = info.Length();
   string badArgs = "(number, number, number) expected.";
 
-  if (length == 0 || length == 2 || length > 3) {
+  if (length != 1 && length != 3) {
     Napi::TypeError::New(env, badArgs).ThrowAsJavaScriptException();
     return;
   }
@@ -38,7 +38,7 @@ Point::Point(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Point>(info) {
     Napi::External<S2Point> external = info[0].As<Napi::External<S2Point>>();
     this->s2Point = *external.Data();
 
-  } else { // (x, y, x)
+  } else { // (x, y, z)
     if (!info[0].IsNumber() || !info[1].IsNumber() || !info[2].IsNumber()) {
       Napi::TypeError::New(env, badArgs).ThrowAsJavaScriptException();
       return;
