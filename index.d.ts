@@ -2,9 +2,19 @@ declare module '@radarlabs/s2' {
 
   export type ChildPosition = 0 | 1 | 2 | 3;
 
+  export class Point {
+
+    constructor(x: number, y: number, z: number);
+
+    public x(): number;
+    public y(): number;
+    public z(): number;
+  }
+
   export class LatLng {
 
     constructor(latDegrees: number, lngDegrees: number);
+    constructor(point: Point);
 
     public normalized(): LatLng;
 
@@ -12,7 +22,6 @@ declare module '@radarlabs/s2' {
     public longitude(): number;
 
     public toString(): string;
-
   }
 
   export class CellId {
@@ -36,7 +45,12 @@ declare module '@radarlabs/s2' {
     public level(): number;
 
     public static fromToken(token: string): CellId;
+  }
 
+  export class Cell {
+    public constructor(cellId: CellId);
+
+    public getVertex(pos: number): Point;
   }
 
   export class CellUnion {
@@ -54,7 +68,6 @@ declare module '@radarlabs/s2' {
     public ids(): BigUint64Array;
     public cellIds(): CellId[];
     public tokens(): string[];
-
   }
 
   export interface RegionCovererOptions {
@@ -72,5 +85,4 @@ declare module '@radarlabs/s2' {
     public static getRadiusCoveringTokens(ll: LatLng, radiusM: number, options: RegionCovererOptions): string[] | null;
     public static getRadiusCovering(ll: LatLng, radiusM: number, options: RegionCovererOptions): CellUnion | null;
   }
-
 }

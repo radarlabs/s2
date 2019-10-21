@@ -28,18 +28,41 @@ LatLng::LatLng(const Napi::CallbackInfo& info) : Napi::ObjectWrap<LatLng>(info) 
   Napi::HandleScope scope(env);
 
   int length = info.Length();
-  if (length <= 0 || !info[0].IsNumber() || !info[1].IsNumber()) {
-    Napi::TypeError::New(env, "(lat: number, lng: number) expected.").ThrowAsJavaScriptException();
+
+  if (length <= 0 || length > 2) {
+    Napi::TypeError::New(env, "(lat: number, lng: number) | Point expected.").ThrowAsJavaScriptException();
     return;
   }
 
-  Napi::Number lat = info[0].As<Napi::Number>();
-  Napi::Number lng = info[1].As<Napi::Number>();
+  if (length == 1) { // Point
+    if (!info[0].IsObject()) {
+      Napi::TypeError::New(env, "Point expected.").ThrowAsJavaScriptException();
+      return;
+    }
+    Napi::Object object = info[0].As<Napi::Object>();
+    bool isPoint = object.InstanceOf(Point::constructor.Value());
+    if (!isPoint) {
+      Napi::TypeError::New(env, "Point expected.").ThrowAsJavaScriptException();
+      return;
+    }
 
-  this->s2latlng = S2LatLng::FromDegrees(
-    lat.DoubleValue(),
-    lng.DoubleValue()
-  );
+    Point* point = Point::Unwrap(object);
+    this->s2latlng = S2LatLng(point->Get());
+
+  } else { // lat, lgn
+    if (!info[0].IsNumber() || !info[1].IsNumber()) {
+      Napi::TypeError::New(env, "(lat: number, lng: number) expected.").ThrowAsJavaScriptException();
+      return;
+    }
+
+    Napi::Number lat = info[0].As<Napi::Number>();
+    Napi::Number lng = info[1].As<Napi::Number>();
+
+    this->s2latlng = S2LatLng::FromDegrees(
+      lat.DoubleValue(),
+      lng.DoubleValue()
+    );
+  }
 }
 
 
