@@ -105,5 +105,6 @@ if anything has changed. To keep up with updates, see [CHANGELOG.md](https://git
 
 ## Resources
 
+- [Introductory blog post from Radar](https://radar.io/blog/open-source-node-js-typescript-s2-library)
 - [A detailed explanation on the S2 library](http://s2geometry.io/)
 - [Sidewalk Lab's S2 map for visualizing S2 tokens](https://s2.sidewalklabs.com/regioncoverer/)
