@@ -22,3 +22,12 @@ test("Cell#getVertex returns Point for vertex position", () => {
   expect([v3.x(), v3.y(), v3.z()]).toEqual([-0.6195734250744275, 0.5248419898946621, 0.5836691328012421]);
   expect([v4.x(), v4.y(), v4.z()]).toEqual([-0.6194307451080033, 0.5247211253861704, 0.583929184566429]);
 });
+
+test("Cell#getCenter returns Point for center position", () => {
+  const id = 6924439526941130752n;
+  const cellId = new s2.CellId(id);
+  const cell = new s2.Cell(cellId);
+
+  const center = cell.getCenter();
+  expect([center.x(), center.y(), center.z()]).toEqual([-0.6194403961888982, 0.5249190405535087, 0.5837410354204379]);
+});

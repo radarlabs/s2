@@ -19,6 +19,7 @@ class Cell : public Napi::ObjectWrap<Cell> {
 
   private:
     Napi::Value GetVertex(const Napi::CallbackInfo &info);
+    Napi::Value GetCenter(const Napi::CallbackInfo &info);
     S2Cell s2Cell;
 };
 
