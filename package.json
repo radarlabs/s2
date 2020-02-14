@@ -20,7 +20,8 @@
   ],
   "devDependencies": {
     "jest": "^24.8.0",
-    "aws-sdk": "2.x"
+    "aws-sdk": "2.x",
+    "bindings": "^1.5.0",
   },
   "binary": {
     "module_name": "s2",
@@ -30,7 +31,6 @@
     "host": "https://node-s2-binaries.s3.amazonaws.com"
   },
   "dependencies": {
-    "bindings": "^1.5.0",
     "node-addon-api": "^1.7.1",
     "node-pre-gyp": "^0.14.0"
   }
