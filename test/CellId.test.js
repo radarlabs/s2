@@ -1,6 +1,6 @@
 const binary = require('node-pre-gyp');
 const path = require('path');
-var binding_path = binary.find(path.resolve(path.join(__dirname,'./package.json')));
+var binding_path = binary.find(path.resolve(path.join('..','./package.json')));
 const s2 = require(binding_path);
 
 const tokyoTower = [35.6586, 139.7454];
