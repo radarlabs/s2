@@ -1,6 +1,6 @@
 const binary = require('node-pre-gyp');
 const path = require('path');
-const binding_path = binary.find(path.resolve(path.join('./package.json')));
+var binding_path = binary.find(path.resolve(path.join(__dirname,'./package.json')));
 const s2 = require(binding_path);
 
 test("Point#constructor accepts x,y,z values", () => {
