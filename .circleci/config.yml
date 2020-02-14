@@ -22,19 +22,19 @@ dockerbuild: &dockerbuild
         when: on_success
 
 jobs:
-  node-10:
+  "node-10":
     <<: *dockerbuild
     docker:
       - image: circleci/node:10.16.2
-  node-11:
+  "node-11":
     <<: *dockerbuild
     docker:
       - image: circleci/node:11.15.0
-  node-10:
+  "node-10":
     <<: *dockerbuild
     docker:
       - image: circleci/node:12.18.0
-  node-13:
+  "node-13":
     <<: *dockerbuild
     docker:
       - image: circleci/node:13.8.0
