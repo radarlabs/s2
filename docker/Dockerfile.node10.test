@@ -4,5 +4,6 @@ WORKDIR /app
 COPY . /app
 
 RUN npm install
-RUN JOBS=max PATH=$(npm bin):$PATH node-pre-gyp rebuild package publish
+RUN JOBS=max PATH=$(npm bin):$PATH node-pre-gyp rebuild 
 CMD npm run test
+PATH=$(npm bin):$PATH node-pre-gyp package publish
