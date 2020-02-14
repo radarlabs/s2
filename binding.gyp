@@ -3,7 +3,6 @@
   # node-pre-gyp handles passing them down to node-gyp when you build from source
   "targets": [{
     "target_name": "<(module_name)",
-    "product_dir": "<(module_path)",
 
     "sources": [
       "./src/s2.cc",
@@ -153,5 +152,17 @@
 
       }]
     ]
-  }]
+  },
+    {
+      "target_name": "action_after_build",
+      "type": "none",
+      "dependencies": [ "<(module_name)" ],
+      "copies": [
+        {
+          "files": [ "<(PRODUCT_DIR)/<(module_name).node" ],
+          "destination": "<(module_path)"
+        }
+      ]
+    }
+]
 }
