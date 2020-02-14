@@ -9,7 +9,7 @@
     "url": "https://github.com/radarlabs/s2.git"
   },
   "scripts": {
-    "install" : "node-pre-gyp install --fallback-to-build",
+    "install": "node-pre-gyp install --fallback-to-build",
     "test": "jest --logHeapUsage --verbose"
   },
   "author": "Jeff Kao (jeff@radar.io)",
