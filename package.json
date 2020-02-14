@@ -33,6 +33,6 @@
   "dependencies": {
     "node-addon-api": "^1.7.1",
     "node-pre-gyp": "^0.14.0",
-    "node-gyp": "5.0.6"
+    "node-gyp": "^5.0.6"
   }
 }
