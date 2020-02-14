@@ -1,4 +1,7 @@
-const s2 = require('bindings')('s2');
+const binary = require('node-pre-gyp');
+const path = require('path');
+const binding_path = binary.find(path.resolve(path.join('./package.json')));
+const s2 = require(binding_path);
 
 test("Cell#constructor accepts cellId", () => {
   const id = 6924439526941130752n;
