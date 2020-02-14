@@ -33,7 +33,7 @@ jobs:
   "node-12":
     <<: *dockerbuild
     docker:
-      - image: circleci/node:12.18.0
+      - image: circleci/node:12.8.0
   "node-13":
     <<: *dockerbuild
     docker:
