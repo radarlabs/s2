@@ -16,7 +16,7 @@ version: 2
         name: Test
         command: npm run test
         when: on_success
-     - run:
+    - run:
         name: Publish
         command: npm run publish
         when: on_success
