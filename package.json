@@ -10,7 +10,8 @@
   },
   "scripts": {
     "install": "node-pre-gyp install --fallback-to-build",
-    "test": "jest --logHeapUsage --verbose"
+    "test": "jest --logHeapUsage --verbose",
+    "publish": "node-pre-gyp package publish"
   },
   "author": "Jeff Kao (jeff@radar.io)",
   "license": "Apache-2.0",
