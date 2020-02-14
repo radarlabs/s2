@@ -1,6 +1,6 @@
 {
   "name": "@radarlabs/s2",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Node.js JavaScript and TypeScript bindings for the Google S2 geolocation library.",
   "main": "index.js",
   "types": "index.d.ts",
@@ -11,7 +11,7 @@
   "scripts": {
     "install": "node-pre-gyp install --fallback-to-build",
     "test": "jest --logHeapUsage --verbose",
-    "publish": "node-pre-gyp package publish"
+    "publish": "node-pre-gyp package unpublish publish"
   },
   "author": "Jeff Kao (jeff@radar.io)",
   "license": "Apache-2.0",
