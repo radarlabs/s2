@@ -51,6 +51,7 @@ declare module '@radarlabs/s2' {
     public constructor(cellId: CellId);
 
     public getVertex(pos: number): Point;
+    public getCenter(): Point;
   }
 
   export class CellUnion {
