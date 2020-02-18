@@ -7,6 +7,7 @@ Napi::Object Cell::Init(Napi::Env env, Napi::Object exports) {
 
   Napi::Function func = DefineClass(env, "Cell", {
     InstanceMethod("getVertex", &Cell::GetVertex),
+    InstanceMethod("getCenter", &Cell::GetCenter),
   });
 
   constructor = Napi::Persistent(func);
@@ -49,6 +50,16 @@ Napi::Value Cell::GetVertex(const Napi::CallbackInfo &info) {
 
   Napi::Number vertex = info[0].As<Napi::Number>();
   S2Point point = s2Cell.GetVertex(vertex);
+
+  return Point::constructor.New({
+    Napi::External<S2Point>::New(env, &point)
+  });
+}
+
+Napi::Value Cell::GetCenter(const Napi::CallbackInfo &info) {
+  Napi::Env env = info.Env();
+
+  S2Point point = s2Cell.GetCenter();
 
   return Point::constructor.New({
     Napi::External<S2Point>::New(env, &point)
