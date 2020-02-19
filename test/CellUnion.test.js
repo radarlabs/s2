@@ -1,4 +1,8 @@
-const s2 = require('bindings')('s2');
+// magic incantation from step 3 @ https://github.com/mapbox/node-pre-gyp#readme
+const binary = require('node-pre-gyp');
+const path = require('path');
+var binding_path = binary.find(path.resolve('./package.json'));
+const s2 = require(binding_path);
 
 // https://s2.sidewalklabs.com/regioncoverer/?center=40.719527%2C-73.960561&zoom=13&cells=89c25915%2C89c25917%2C89c25919%2C89c2593%2C89c2595%2C89c25967f%2C89c2596c%2C89c25eb4%2C89c25ecc%2C89c25ed4
 const tokens = [

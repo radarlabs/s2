@@ -1,60 +1,43 @@
 version: 2
 
+dockerbuild: &dockerbuild
+  steps:
+    - checkout
+    - run:
+        name: "Pull submodules"
+        command: |
+          git submodule init
+          git submodule update --remote
+    - run:
+        name: Install dependencies
+        command: npm install
+        when: on_success
+    - run:
+        name: Test
+        command: npm run test
+        when: on_success
+    - run:
+        name: Publish
+        command: npm run publish
+        when: on_success
+
 jobs:
   "node-10":
+    <<: *dockerbuild
     docker:
       - image: circleci/node:10.16.2
-    steps:
-      - checkout
-      - run:
-          name: "Pull submodules"
-          command: |
-            git submodule init
-            git submodule update --remote
-      - run:
-          name: Install dependencies
-          command: npm install
-          when: on_success
-      - run:
-          name: Test
-          command: npm run test
-          when: on_success
   "node-11":
+    <<: *dockerbuild
     docker:
       - image: circleci/node:11.15.0
-    steps:
-      - checkout
-      - run:
-          name: "Pull submodules"
-          command: |
-            git submodule init
-            git submodule update --remote
-      - run:
-          name: Install dependencies
-          command: npm install
-          when: on_success
-      - run:
-          name: Test
-          command: npm run test
-          when: on_success
   "node-12":
+    <<: *dockerbuild
     docker:
       - image: circleci/node:12.8.0
-    steps:
-      - checkout
-      - run:
-          name: "Pull submodules"
-          command: |
-            git submodule init
-            git submodule update --remote
-      - run:
-          name: Install dependencies
-          command: npm install
-          when: on_success
-      - run:
-          name: Test
-          command: npm run test
-          when: on_success
+  "node-13":
+    <<: *dockerbuild
+    docker:
+      - image: circleci/node:13.8.0
 
 workflows:
   version: 2
@@ -63,3 +46,5 @@ workflows:
       - "node-10"
       - "node-11"
       - "node-12"
+      - "node-13"
+

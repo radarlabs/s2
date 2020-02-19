@@ -1,6 +1,6 @@
 {
   "name": "@radarlabs/s2",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Node.js JavaScript and TypeScript bindings for the Google S2 geolocation library.",
   "main": "index.js",
   "types": "index.d.ts",
@@ -9,17 +9,30 @@
     "url": "https://github.com/radarlabs/s2.git"
   },
   "scripts": {
-    "test": "jest --logHeapUsage --verbose"
+    "install": "node-pre-gyp install --fallback-to-build",
+    "test": "jest --logHeapUsage --verbose",
+    "publish": "node-pre-gyp package unpublish publish"
   },
   "author": "Jeff Kao (jeff@radar.io)",
   "license": "Apache-2.0",
-  "keywords": ["geolocation"],
+  "keywords": [
+    "geolocation"
+  ],
   "devDependencies": {
     "jest": "^24.8.0",
-    "node-gyp": "^5.0.3"
+    "aws-sdk": "2.x",
+    "bindings": "^1.5.0"
+  },
+  "binary": {
+    "module_name": "s2",
+    "module_path": "./lib/binding/{configuration}/{node_abi}-{platform}-{arch}/",
+    "remote_path": "./{module_name}/v{version}/{configuration}/",
+    "package_name": "{module_name}-v{version}-{node_abi}-{platform}-{arch}.tar.gz",
+    "host": "https://node-s2-binaries.s3.amazonaws.com"
   },
   "dependencies": {
-    "bindings": "^1.5.0",
-    "node-addon-api": "^1.7.1"
+    "node-addon-api": "^1.7.1",
+    "node-pre-gyp": "^0.14.0",
+    "node-gyp": "^5.0.6"
   }
 }

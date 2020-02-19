@@ -20,3 +20,8 @@ docker build -t $NODE_11_IMAGE -f $NODE_11_DOCKERFILE . && docker run $NODE_11_I
 NODE_12_IMAGE=test12
 NODE_12_DOCKERFILE=./docker/Dockerfile.node12.test
 docker build -t $NODE_12_IMAGE -f $NODE_12_DOCKERFILE . && docker run $NODE_12_IMAGE:latest
+
+# test node 13
+NODE_13_IMAGE=test13
+NODE_13_DOCKERFILE=./docker/Dockerfile.node13.test
+docker build -t $NODE_13_IMAGE -f $NODE_13_DOCKERFILE . && docker run $NODE_13_IMAGE:latest
