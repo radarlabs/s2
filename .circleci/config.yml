@@ -16,10 +16,6 @@ dockerbuild: &dockerbuild
         name: Test
         command: npm run test
         when: on_success
-    - run:
-        name: Publish
-        command: npm run publish
-        when: on_success
 
 jobs:
   "node-10":
