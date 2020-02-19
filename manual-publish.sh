@@ -2,6 +2,10 @@
 
 # this script is mainly for running on macs to publish binaries
 # for linux, we use a circleci/docker build
+#
+# per the node-gyp-pre docs, you can use any of the standard ways
+# to specify AWS keys from the javascript aws-sdk, or the env vars 
+# node_pre_gyp_accessKeyId and node_pre_gyp_secretAccessKey
 
 set -e
 
