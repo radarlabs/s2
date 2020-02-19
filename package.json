@@ -11,7 +11,7 @@
   "scripts": {
     "install": "node-pre-gyp install --fallback-to-build",
     "test": "jest --logHeapUsage --verbose",
-    "publish": "node-pre-gyp package unpublish publish"
+    "publish-to-s3": "node-pre-gyp package unpublish publish"
   },
   "author": "Jeff Kao (jeff@radar.io)",
   "license": "Apache-2.0",
