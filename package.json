@@ -9,6 +9,7 @@
     "url": "https://github.com/radarlabs/s2.git"
   },
   "scripts": {
+    "build": "node-pre-gyp install --build-from-source",
     "install": "node-pre-gyp install --fallback-to-build",
     "test": "jest --logHeapUsage --verbose",
     "publish-to-s3": "node-pre-gyp package unpublish publish"

@@ -14,6 +14,7 @@
       "./src/loop.cc",
       "./src/point.cc",
       "./src/polygon.cc",
+      "./src/polyline.cc",
       "./src/region_coverer.cc",
       "./src/cell_union.cc",
 

@@ -6,6 +6,7 @@
 #include "loop.h"
 #include "point.h"
 #include "polygon.h"
+#include "polyline.h"
 #include "region_coverer.h"
 
 Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
@@ -16,6 +17,7 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
   Loop::Init(env, exports);
   Point::Init(env, exports);
   Polygon::Init(env, exports);
+  Polyline::Init(env, exports);
   CellUnion::Init(env, exports);
   return RegionCoverer::Init(env, exports);
 }
