@@ -44,6 +44,7 @@ test("Polyline#NearlyCovers true", () => {
   });
   const polyline = new s2.Polyline(lls);
 
+
   const newBaiCauseway = [[30.261254, 120.147342],[30.260202, 120.146395],[30.258967, 120.145267],[30.257545, 120.144089], [30.256662, 120.143349],[30.256027, 120.142843],[30.255445, 120.142336],[30.254703, 120.141366]];
   const newLls = newBaiCauseway.map((latlng) => {
     const [lat, lng] = latlng;
@@ -69,7 +70,17 @@ test("Polyline#NearlyCovers false", () => {
     const [lat, lng] = latlng;
     return new s2.LatLng(lat, lng);
   });
-  const newPolyline = new s2.Polyline(newLls);
+  const newPolyline = new s2.Polyline(newLls); 
 
   expect(polyline.nearlyCovers(newPolyline, 1e-3)).toBe(false);
+});
+
+test("Polyline#getLength", () => {
+  const lls = baiCauseway.map((latlng) => {
+    const [lat, lng] = latlng;
+    return new s2.LatLng(lat, lng);
+  });
+  const polyline = new s2.Polyline(lls);
+
+  expect(polyline.getLength()).toBe(805.4416481053961);
 });

@@ -8,6 +8,7 @@ Napi::Object Polyline::Init(Napi::Env env, Napi::Object exports) {
   Napi::Function func = DefineClass(env, "Polyline", {
     InstanceMethod("contains", &Polyline::Contains),
     InstanceMethod("nearlyCovers", &Polyline::NearlyCovers),
+    InstanceMethod("getLength", &Polyline::GetLength),
   });
 
   constructor = Napi::Persistent(func);
@@ -111,4 +112,11 @@ S2Polyline* Polyline::Get() {
   return this->s2polyline.Clone();
 }
 
+Napi::Value Polyline::GetLength(const Napi::CallbackInfo& info){
+  double length = 1;
+  Napi::Env env = info.Env();
+  S1Angle s1Angle = this->s2polyline.GetLength();
+  length = S2Earth::ToMeters(s1Angle);
 
+  return Napi::Number::New(env, length);
+}

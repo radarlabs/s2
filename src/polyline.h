@@ -6,6 +6,7 @@
 #include "latlng.h"
 #include "cell.h"
 #include "s2/s1angle.h"
+#include "s2/s2earth.h"
 #include "s2/s2pointutil.h"
 #include "s2/s2polyline.h"
 #include "s2/base/stringprintf.h"
@@ -21,6 +22,7 @@ class Polyline : public Napi::ObjectWrap<Polyline> {
   private:
     Napi::Value Contains(const Napi::CallbackInfo &info);
     Napi::Value NearlyCovers(const Napi::CallbackInfo &info);
+    Napi::Value GetLength(const Napi::CallbackInfo &info);
 
     S2Polyline s2polyline;
 };
