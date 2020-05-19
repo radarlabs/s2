@@ -14,7 +14,7 @@ const baiCauseway_point = [30.257775, 120.144291];
 test("Polyline#constructor accepts LatLng array", () => {
   
   const lls = baiCauseway.map((latlng) => {
-    const [lng, lat] = latlng;
+    const [lat, lng] = latlng;
     return new s2.LatLng(lat, lng);
   });
   const polyline = new s2.Polyline(lls);
@@ -72,7 +72,7 @@ test("Polyline#NearlyCovers false", () => {
   });
   const newPolyline = new s2.Polyline(newLls); 
 
-  expect(polyline.nearlyCovers(newPolyline, 1e-3)).toBe(false);
+  expect(polyline.nearlyCovers(newPolyline, 1e-5)).toBe(false);
 });
 
 test("Polyline#getLength", () => {
@@ -84,3 +84,50 @@ test("Polyline#getLength", () => {
 
   expect(polyline.getLength()).toBe(805.4416481053961);
 });
+
+test("Polyline#getCentroid", () => {
+  const lls = baiCauseway.map((latlng) => {
+    const [lat, lng] = latlng;
+    return new s2.LatLng(lat, lng);
+  });
+  const polyline = new s2.Polyline(lls);
+  const latlngStr = polyline.getCentroid();
+  //console.log("getCentroid: ", latlngStr);
+  
+  expect(polyline.getCentroid()).toBe("30.258369,120.144809");
+});
+
+test("Polyline#interpolate", () => {
+  const lls = baiCauseway.map((latlng) => {
+    const [lat, lng] = latlng;
+    return new s2.LatLng(lat, lng);
+  });
+
+  const polyline = new s2.Polyline(lls);
+  const latlngStr = polyline.interpolate(3/4);
+  //console.log('interpolate: latlngStr: ', latlngStr);
+  
+  expect(polyline.interpolate(3/4)).toBe("30.256914,120.143561");
+});
+
+test("poly#project", () => {
+  // baiCauseway polyline
+  const lls = baiCauseway.map((latlng) => {
+    const [lat, lng] = latlng;
+    return new s2.LatLng(lat, lng);
+  });
+  const polyline = new s2.Polyline(lls);
+
+  const westLakeMuseum = [30.259710, 120.140802];//西湖博览会博物馆
+  const westLakeMuseumLatLng = new s2.LatLng(westLakeMuseum[0], westLakeMuseum[1]);
+  expect(polyline.project(westLakeMuseumLatLng)).toBe("30.257633,120.144162");
+
+  const midLakePavilion = [30.248636, 120.139723];// 西湖湖心亭
+  const midLakePavilionLatLng = new s2.LatLng(midLakePavilion[0], midLakePavilion[1]);
+
+  expect(polyline.project(midLakePavilionLatLng)).toBe("30.255445,120.142336");
+  // console.log('midLakePavilionLatLng: ', polyline.project(midLakePavilionLatLng));
+  // console.log('westLakeMuseumLatLng: ', polyline.project(westLakeMuseumLatLng));
+})
+
+

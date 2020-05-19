@@ -9,6 +9,9 @@ Napi::Object Polyline::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("contains", &Polyline::Contains),
     InstanceMethod("nearlyCovers", &Polyline::NearlyCovers),
     InstanceMethod("getLength", &Polyline::GetLength),
+    InstanceMethod("getCentroid", &Polyline::GetCentroid),
+    InstanceMethod("interpolate", &Polyline::Interpolate),
+    InstanceMethod("project",&Polyline::Project),
   });
 
   constructor = Napi::Persistent(func);
@@ -119,4 +122,52 @@ Napi::Value Polyline::GetLength(const Napi::CallbackInfo& info){
   length = S2Earth::ToMeters(s1Angle);
 
   return Napi::Number::New(env, length);
+}
+
+Napi::Value Polyline::GetCentroid(const Napi::CallbackInfo& info){
+  
+  S2Point s2point = this->s2polyline.GetCentroid();
+  S2LatLng s2latlng = S2LatLng(s2point);
+
+  return Napi::String::New(info.Env(), s2latlng.ToStringInDegrees());
+}
+
+Napi::Value Polyline::Interpolate(const Napi::CallbackInfo& info){
+   Napi::Env env = info.Env();
+  int length = info.Length();
+
+  if(length != 1 || !info[0].IsNumber()){
+    Napi::TypeError::New(env, "expected fraction").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+  double fraction = info[0].As<Napi::Number>().DoubleValue();
+  S2Point s2point = this->s2polyline.Interpolate(fraction);
+  S2LatLng s2latlng = S2LatLng(s2point);
+  return Napi::String::New(info.Env(), s2latlng.ToStringInDegrees());
+}
+
+Napi::Value Polyline::Project(const Napi::CallbackInfo& info){
+   Napi::Env env = info.Env();
+  int length = info.Length();
+
+  if(length != 1 || !info[0].IsObject()){
+    Napi::TypeError::New(env, "expected LatLng object").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+
+  Napi::Object object = info[0].As<Napi::Object>();
+  bool isLatlng = object.InstanceOf(LatLng::constructor.Value());
+  if (!isLatlng) {
+    Napi::TypeError::New(env, "expected LatLng object").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+
+  LatLng* ll = LatLng::Unwrap(object);
+  S2LatLng sourceLatLng = ll->Get();
+
+  int index;
+
+  S2Point s2point = this->s2polyline.Project(sourceLatLng.ToPoint(), &index);
+  S2LatLng s2latlng = S2LatLng(s2point);
+  return Napi::String::New(info.Env(), s2latlng.ToStringInDegrees());
 }

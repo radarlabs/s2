@@ -23,6 +23,9 @@ class Polyline : public Napi::ObjectWrap<Polyline> {
     Napi::Value Contains(const Napi::CallbackInfo &info);
     Napi::Value NearlyCovers(const Napi::CallbackInfo &info);
     Napi::Value GetLength(const Napi::CallbackInfo &info);
+    Napi::Value GetCentroid(const Napi::CallbackInfo &info);
+    Napi::Value Interpolate(const Napi::CallbackInfo &info);
+    Napi::Value Project(const Napi::CallbackInfo &info);
 
     S2Polyline s2polyline;
 };

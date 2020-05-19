@@ -10,6 +10,7 @@
       "./src/builder.cc",
       "./src/cell.cc",
       "./src/cell_id.cc",
+      "./src/earth.cc",
       "./src/latlng.cc",
       "./src/loop.cc",
       "./src/point.cc",
