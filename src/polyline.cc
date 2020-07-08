@@ -169,5 +169,8 @@ Napi::Value Polyline::Project(const Napi::CallbackInfo& info){
 
   S2Point s2point = this->s2polyline.Project(sourceLatLng.ToPoint(), &index);
   S2LatLng s2latlng = S2LatLng(s2point);
-  return Napi::String::New(info.Env(), s2latlng.ToStringInDegrees());
+  Napi::Object returnObj = Napi::Object::New(env);
+  returnObj.Set("loc", s2latlng.ToStringInDegrees());
+  returnObj.Set("index", index);
+  return returnObj;
 }

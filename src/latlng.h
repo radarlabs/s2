@@ -22,6 +22,7 @@ class LatLng : public Napi::ObjectWrap<LatLng> {
     Napi::Value Normalized(const Napi::CallbackInfo &info);
     Napi::Value Latitude(const Napi::CallbackInfo &info);
     Napi::Value Longitude(const Napi::CallbackInfo &info);
+    Napi::Value ApproxEquals(const Napi::CallbackInfo &info);
     S2LatLng s2latlng;
 };
 

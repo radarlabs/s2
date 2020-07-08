@@ -120,14 +120,17 @@ test("poly#project", () => {
 
   const westLakeMuseum = [30.259710, 120.140802];//西湖博览会博物馆
   const westLakeMuseumLatLng = new s2.LatLng(westLakeMuseum[0], westLakeMuseum[1]);
-  expect(polyline.project(westLakeMuseumLatLng)).toBe("30.257633,120.144162");
+
+  const westLakeMuseumNearPoint = polyline.project(westLakeMuseumLatLng);
+  expect(westLakeMuseumNearPoint.loc).toBe("30.257633,120.144162");
+  expect(westLakeMuseumNearPoint.index).toBe(3);
 
   const midLakePavilion = [30.248636, 120.139723];// 西湖湖心亭
   const midLakePavilionLatLng = new s2.LatLng(midLakePavilion[0], midLakePavilion[1]);
 
-  expect(polyline.project(midLakePavilionLatLng)).toBe("30.255445,120.142336");
-  // console.log('midLakePavilionLatLng: ', polyline.project(midLakePavilionLatLng));
-  // console.log('westLakeMuseumLatLng: ', polyline.project(westLakeMuseumLatLng));
+  const midLakePavilionPoint = polyline.project(midLakePavilionLatLng);
+  expect(midLakePavilionPoint.loc).toBe("30.255445,120.142336");
+  expect(midLakePavilionPoint.index).toBe(7);
 })
 
 

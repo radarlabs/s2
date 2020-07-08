@@ -48,9 +48,15 @@ test("Earth#getInitalBearingDegree", () => {
 
   
   const degree_east = s2.Earth.getInitalBearingDegree(latLng_center, latLng_east);
-  const degree_south = s2.Earth.getInitalBearingDegree(latLng_center, latLng_south);
-  const degree_west = s2.Earth.getInitalBearingDegree(latLng_center, latLng_west);
-  const degree_north = s2.Earth.getInitalBearingDegree(latLng_center, latLng_north);
+  expect(degree_east).toBe(88.21335159225947);
 
-  console.log('----- getInitalBearingDegree: degree_east: %s, degree_south: %s, degree_west: %s, degree_north: ', degree_east, degree_south, degree_west, degree_north);
+  const degree_south = s2.Earth.getInitalBearingDegree(latLng_center, latLng_south);
+  expect(degree_south).toBe(172.34356352357213);
+
+  const degree_west = s2.Earth.getInitalBearingDegree(latLng_center, latLng_west);
+  expect(degree_west).toBe(-82.42555355986279);
+
+  const degree_north = s2.Earth.getInitalBearingDegree(latLng_center, latLng_north);
+  expect(degree_north).toBe(13.70028061338925);
+
 });
