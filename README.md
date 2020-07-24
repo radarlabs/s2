@@ -82,6 +82,43 @@ console.log(coveringSet.contains(pointAtLevel14.token()));
 
 ```
 
+To generate a covering for a given radius around a point:
+
+```
+const s2 = require('@radarlabs/s2');
+
+# make an S2 latlng object for downtown San Diego
+const s2LatLong = new s2.LatLng(32.715651, -117.160542);
+
+# set cell covering options so the biggest region is a 6 and smallest is a 13, and limit to 10 cells
+const cellCoveringOptions = {min: 6, max: 13, max_cells: 10};
+
+# get the cells (with the size range allowed) covering a 10,000 meter search radius centered on the given location
+# Note that this call returns a CellUnion object instead of a list of tokens, which is useful for comparisons
+const coveringCells = s2.RegionCoverer.getRadiusCovering(s2LatLong, 10000, cellCoveringOptions);
+# For this example though, we'll loop over the cellIds within the CellUnion and get their tokens
+console.log(coveringCells.cellIds().map((cellId) => cellId.token()));
+
+> 80d94d
+> 80d951
+> 80d953
+> 80d955
+> 80d956c
+> 80dbffc
+> 80dc01
+> 80deab
+> 80dead
+> 80deb2ac
+
+# the "coveringCells" CellUnion is like the "coveringSet" from the previous example, so can be used directly without converting to a set
+# test by checking a cell centered at our lat long
+console.log(coveringCells.contains(new s2.CellId(s2LatLong)));
+> true
+
+```
+Here's a [visualization](http://s2.sidewalklabs.com/regioncoverer/?center=32.716657%2C-117.180841&zoom=11&cells=80d94d%2C80d951%2C80d953%2C80d955%2C80d956c%2C80dbffc%2C80dc01%2C80deab%2C80dead%2C80deb2ac) of the above set of covering cells.  The center of the 10k radius is in downtown San Diego.
+
+
 Check if a cell is contained in another:
 
 ```
