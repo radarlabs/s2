@@ -34,6 +34,9 @@ class CellId : public Napi::ObjectWrap<CellId> {
     Napi::Value Level(const Napi::CallbackInfo &info);
     Napi::Value IsLeaf(const Napi::CallbackInfo &info);
 
+    Napi::Value RangeMin(const Napi::CallbackInfo &info);
+    Napi::Value RangeMax(const Napi::CallbackInfo &info);
+
     S2CellId s2cellid;
 
 };
