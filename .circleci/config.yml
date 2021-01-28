@@ -22,18 +22,10 @@ jobs:
     <<: *dockerbuild
     docker:
       - image: circleci/node:10.16.2
-  "node-11":
-    <<: *dockerbuild
-    docker:
-      - image: circleci/node:11.15.0
   "node-12":
     <<: *dockerbuild
     docker:
       - image: circleci/node:12.8.0
-  "node-13":
-    <<: *dockerbuild
-    docker:
-      - image: circleci/node:13.8.0
   "node-14":
     <<: *dockerbuild
     docker:
@@ -44,8 +36,6 @@ workflows:
   build:
     jobs:
       - "node-10"
-      - "node-11"
       - "node-12"
-      - "node-13"
       - "node-14"
 
