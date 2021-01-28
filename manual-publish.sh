@@ -35,3 +35,9 @@ nvm use v13
 rm -rf node_modules
 npm install
 JOBS=max npx node-pre-gyp rebuild package unpublish publish
+
+nvm install v14
+nvm use v14
+rm -rf node_modules
+npm install
+JOBS=max npx node-pre-gyp rebuild package unpublish publish
