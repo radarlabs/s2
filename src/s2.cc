@@ -2,20 +2,24 @@
 #include "cell.h"
 #include "cell_id.h"
 #include "cell_union.h"
+#include "earth.h"
 #include "latlng.h"
 #include "loop.h"
 #include "point.h"
 #include "polygon.h"
+#include "polyline.h"
 #include "region_coverer.h"
 
 Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
   Builder::Init(env, exports);
   Cell::Init(env, exports);
   CellId::Init(env, exports);
+  Earth::Init(env, exports);
   LatLng::Init(env, exports);
   Loop::Init(env, exports);
   Point::Init(env, exports);
   Polygon::Init(env, exports);
+  Polyline::Init(env, exports);
   CellUnion::Init(env, exports);
   return RegionCoverer::Init(env, exports);
 }

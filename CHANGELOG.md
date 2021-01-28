@@ -3,6 +3,9 @@
 - Added CellId.rangeMin & CellId.rangeMax (thanks to @mast)
 - Only test Node versions with LTS
 - Update s2geometry C++ lib to a4dddf40647c68cd0104eafc31e9c8fb247a6308
+- add Earth support
+- add Polyline support
+- add LatLng#approxEquals 
 
 ## Version 0.0.3
 
