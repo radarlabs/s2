@@ -123,3 +123,13 @@ test("CellId#isLeaf works", () => {
   expect(cellId.isLeaf()).toBe(false);
   expect(cellId.parent(30).isLeaf()).toBe(true);
 });
+
+test("CellId#rangeMin works", () => {
+  const cell = new s2.CellId(6924439526941130752n);
+  expect(cell.rangeMin().id()).toBe(6924439458221654017n)
+});
+
+test("CellId#rangeMax works", () => {
+  const cell = new s2.CellId(6924439526941130752n);
+  expect(cell.rangeMax().id()).toBe(6924439595660607487n)
+});

@@ -1,17 +1,19 @@
-## Version 0.0.6
-- add LngLat#approxEquals 
-
-## Version 0.0.5
-- modify polyline#project return value
-
 ## Version 0.0.4
-- add Earth#getInitalBearingDegree method for initialBearing
 
-## Verison 0.0.3
+- Added CellId.rangeMin & CellId.rangeMax (thanks to @mast)
+- Only test Node versions with LTS
+- Update s2geometry C++ lib to a4dddf40647c68cd0104eafc31e9c8fb247a6308
 - add Earth support
-- add polyline#getCentroid and polyline#interpolate and polyline#project method
+- add Polyline support
+- add LatLng#approxEquals 
 
-## Verison 0.0.2
+## Version 0.0.3
+
+- Expose Cell.getCenter method
+- Library upgrades
+- Publish pre-compiled libraries
+
+## Version 0.0.2
 
 - Introduce s2.RegionCoverer.getRadiusCovering methods that take a lat/lng and radius and generates a covering
 - Expose the Point & Cell class and Cell#getVertex method

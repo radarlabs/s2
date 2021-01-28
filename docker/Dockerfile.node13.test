@@ -1,8 +1,0 @@
-FROM node:13.8.0
-
-WORKDIR /app
-COPY . /app
-
-RUN npm install
-RUN JOBS=max PATH=$(npm bin):$PATH node-pre-gyp rebuild 
-CMD npm run test
