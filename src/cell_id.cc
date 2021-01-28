@@ -16,6 +16,8 @@ Napi::Object CellId::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("next", &CellId::Next),
     InstanceMethod("level", &CellId::Level),
     InstanceMethod("isLeaf", &CellId::IsLeaf),
+    InstanceMethod("rangeMin", &CellId::RangeMin),
+    InstanceMethod("rangeMax", &CellId::RangeMax),
     StaticMethod("fromToken", &CellId::FromToken),
   });
 
@@ -189,6 +191,18 @@ Napi::Value CellId::FromToken(const Napi::CallbackInfo &info) {
   }
   Napi::TypeError::New(env, "(token: string) expected.").ThrowAsJavaScriptException();
   return env.Null();
+}
+
+Napi::Value CellId::RangeMin(const Napi::CallbackInfo &info) {
+  Napi::Env env = info.Env();
+  S2CellId range = s2cellid.range_min();
+  return constructor.New({ Napi::External<S2CellId>::New(env, &range) });
+}
+
+Napi::Value CellId::RangeMax(const Napi::CallbackInfo &info) {
+  Napi::Env env = info.Env();
+  S2CellId range = s2cellid.range_max();
+  return constructor.New({ Napi::External<S2CellId>::New(env, &range) });
 }
 
 S2CellId CellId::Get() {

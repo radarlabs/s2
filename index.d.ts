@@ -44,6 +44,9 @@ declare module '@radarlabs/s2' {
 
     public level(): number;
 
+    public rangeMin(): CellId;
+    public rangeMax(): CellId;
+
     public static fromToken(token: string): CellId;
   }
 
