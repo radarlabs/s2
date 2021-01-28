@@ -1,4 +1,13 @@
-## Verison 0.0.2
+## Version 0.0.4
+
+
+## Version 0.0.3
+
+- Expose Cell.getCenter method
+- Library upgrades
+- Publish pre-compiled libraries
+
+## Version 0.0.2
 
 - Introduce s2.RegionCoverer.getRadiusCovering methods that take a lat/lng and radius and generates a covering
 - Expose the Point & Cell class and Cell#getVertex method
