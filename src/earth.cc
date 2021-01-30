@@ -8,11 +8,11 @@ Napi::Object Earth::Init(Napi::Env env, Napi::Object exports) {
   Napi::Function func = DefineClass(env, "Earth", {
     StaticMethod("toMeters", &Earth::ToMeters),
     StaticMethod("toKm", &Earth::ToKm),
-    StaticMethod("getRadian", &Earth::GetRadian),
-    StaticMethod("getDegree", &Earth::GetDegree),
+    StaticMethod("getRadians", &Earth::GetRadians),
+    StaticMethod("getDegrees", &Earth::GetDegrees),
     StaticMethod("getDistanceKm", &Earth::GetDistanceKm),
     StaticMethod("getDistanceMeters", &Earth::GetDistanceMeters),
-    StaticMethod("getInitalBearingDegree", &Earth::GetInitalBearingDegree),
+    StaticMethod("getInitalBearingDegrees", &Earth::GetInitalBearingDegrees),
   });
 
   constructor = Napi::Persistent(func);
@@ -30,7 +30,7 @@ Earth::Earth(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Earth>(info)  {
 bool Earth::PreCheck(const Napi::CallbackInfo &info, S2LatLng &latlng1, S2LatLng &latlng2){
   int length = info.Length();
 
-  if(length < 2 || !info[0].IsObject() || !info[1].IsObject()){
+  if (length < 2 || !info[0].IsObject() || !info[1].IsObject()){
     return false;
   }
 
@@ -62,8 +62,8 @@ Napi::Value Earth::ToMeters(const Napi::CallbackInfo &info){
   S2LatLng s2LatLngB;
 
   bool isValid = Earth::PreCheck(info, s2LatLngA, s2LatLngB);
-  if(!isValid){
-    Napi::TypeError::New(env, "2 Latlng Object expected.").ThrowAsJavaScriptException();
+  if (!isValid){
+    Napi::TypeError::New(env, "Expected arguments (a: LatLng, b: LatLng)").ThrowAsJavaScriptException();
     return env.Null();
   }
 
@@ -80,8 +80,8 @@ Napi::Value Earth::ToKm(const Napi::CallbackInfo &info){
   S2LatLng s2LatLngB;
 
   bool isValid = Earth::PreCheck(info, s2LatLngA, s2LatLngB);
-  if(!isValid){
-    Napi::TypeError::New(env, "2 Latlng Object expected.").ThrowAsJavaScriptException();
+  if (!isValid){
+    Napi::TypeError::New(env, "Expected arguments (a: LatLng, b: LatLng)").ThrowAsJavaScriptException();
     return env.Null();
   }
 
@@ -92,15 +92,15 @@ Napi::Value Earth::ToKm(const Napi::CallbackInfo &info){
   return Napi::Number::New(env, distance);
 }
 
-Napi::Value Earth::GetRadian(const Napi::CallbackInfo &info){
+Napi::Value Earth::GetRadians(const Napi::CallbackInfo &info){
   Napi::Env env = info.Env();
 
   S2LatLng s2LatLngA;
   S2LatLng s2LatLngB;
 
   bool isValid = Earth::PreCheck(info, s2LatLngA, s2LatLngB);
-  if(!isValid){
-    Napi::TypeError::New(env, "2 Latlng Object expected.").ThrowAsJavaScriptException();
+  if (!isValid) {
+    Napi::TypeError::New(env, "Expected arguments (a: LatLng, b: LatLng)").ThrowAsJavaScriptException();
     return env.Null();
   }
 
@@ -110,15 +110,15 @@ Napi::Value Earth::GetRadian(const Napi::CallbackInfo &info){
   return Napi::Number::New(env, radians);
 }
 
-Napi::Value Earth::GetDegree(const Napi::CallbackInfo &info){
+Napi::Value Earth::GetDegrees(const Napi::CallbackInfo &info){
   Napi::Env env = info.Env();
 
   S2LatLng s2LatLngA;
   S2LatLng s2LatLngB;
 
   bool isValid = Earth::PreCheck(info, s2LatLngA, s2LatLngB);
-  if(!isValid){
-    Napi::TypeError::New(env, "2 Latlng Object expected.").ThrowAsJavaScriptException();
+  if (!isValid){
+    Napi::TypeError::New(env, "Expected arguments (a: LatLng, b: LatLng)").ThrowAsJavaScriptException();
     return env.Null();
   }
 
@@ -135,8 +135,8 @@ Napi::Value Earth::GetDistanceKm(const Napi::CallbackInfo &info){
   S2LatLng s2LatLngB;
 
   bool isValid = Earth::PreCheck(info, s2LatLngA, s2LatLngB);
-  if(!isValid){
-    Napi::TypeError::New(env, "2 Latlng Object expected.").ThrowAsJavaScriptException();
+  if (!isValid){
+    Napi::TypeError::New(env, "Expected arguments (a: LatLng, b: LatLng)").ThrowAsJavaScriptException();
     return env.Null();
   }
 
@@ -152,8 +152,8 @@ Napi::Value Earth::GetDistanceMeters(const Napi::CallbackInfo &info){
   S2LatLng s2LatLngB;
 
   bool isValid = Earth::PreCheck(info, s2LatLngA, s2LatLngB);
-  if(!isValid){
-    Napi::TypeError::New(env, "2 Latlng Object expected.").ThrowAsJavaScriptException();
+  if (!isValid){
+    Napi::TypeError::New(env, "Expected arguments (a: LatLng, b: LatLng)").ThrowAsJavaScriptException();
     return env.Null();
   }
 
@@ -162,15 +162,15 @@ Napi::Value Earth::GetDistanceMeters(const Napi::CallbackInfo &info){
   return Napi::Number::New(env, distance);
 }
 
-Napi::Value Earth::GetInitalBearingDegree(const Napi::CallbackInfo &info){
+Napi::Value Earth::GetInitalBearingDegrees(const Napi::CallbackInfo &info){
   Napi::Env env = info.Env();
 
   S2LatLng s2LatLngA;
   S2LatLng s2LatLngB;
 
   bool isValid = Earth::PreCheck(info, s2LatLngA, s2LatLngB);
-  if(!isValid){
-    Napi::TypeError::New(env, "2 Latlng Object expected.").ThrowAsJavaScriptException();
+  if (!isValid){
+    Napi::TypeError::New(env, "Expected arguments (a: LatLng, b: LatLng)").ThrowAsJavaScriptException();
     return env.Null();
   }
 

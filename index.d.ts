@@ -3,7 +3,6 @@ declare module '@radarlabs/s2' {
   export type ChildPosition = 0 | 1 | 2 | 3;
 
   export class Point {
-
     constructor(x: number, y: number, z: number);
 
     public x(): number;
@@ -12,7 +11,6 @@ declare module '@radarlabs/s2' {
   }
 
   export class LatLng {
-
     constructor(latDegrees: number, lngDegrees: number);
     constructor(point: Point);
 
@@ -21,11 +19,12 @@ declare module '@radarlabs/s2' {
     public latitude(): number;
     public longitude(): number;
 
+    public approxEquals(ll: LatLng, maxErrorRadians?: number): number;
+
     public toString(): string;
   }
 
   export class CellId {
-
     public constructor(id: bigint);
     public constructor(token: string);
     public constructor(ll: LatLng);
@@ -58,7 +57,6 @@ declare module '@radarlabs/s2' {
   }
 
   export class CellUnion {
-
     public constructor(tokens: string[]);
     public constructor(cellIds: CellId[]);
 
@@ -89,4 +87,31 @@ declare module '@radarlabs/s2' {
     public static getRadiusCoveringTokens(ll: LatLng, radiusM: number, options: RegionCovererOptions): string[] | null;
     public static getRadiusCovering(ll: LatLng, radiusM: number, options: RegionCovererOptions): CellUnion | null;
   }
+
+  export class Earth {
+    public static toMeters(a: LatLng, b: LatLng): number;
+    public static getDistanceMeters(a: LatLng, b: LatLng): number;
+
+    public static toKm(a: LatLng, b: LatLng): number;
+    public static getDistanceKm(a: LatLng, b: LatLng): number;
+
+    public static getDegrees(a: LatLng, b: LatLng): number;
+    public static getRadians(a: LatLng, b: LatLng): number;
+
+    public static getInitialBearingDegrees(a: LatLng, b: LatLng): number;
+  }
+
+  export class Polyline {
+    public constructor(lls: LatLng[]);
+
+    public contains(cell: Cell): boolean;
+    public nearlyCovers(other: Polyline, maxError: number): boolean;
+
+    public getLength(): number;
+    public getCentroid(): LatLng;
+
+    public interpolate(fraction: number): LatLng;
+    public project(ll: LatLng): LatLng;
+  }
+
 }

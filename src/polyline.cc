@@ -11,7 +11,7 @@ Napi::Object Polyline::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("getLength", &Polyline::GetLength),
     InstanceMethod("getCentroid", &Polyline::GetCentroid),
     InstanceMethod("interpolate", &Polyline::Interpolate),
-    InstanceMethod("project",&Polyline::Project),
+    InstanceMethod("project", &Polyline::Project),
   });
 
   constructor = Napi::Persistent(func);
@@ -62,7 +62,7 @@ Napi::Value Polyline::Contains(const Napi::CallbackInfo& info){
   Napi::Env env = info.Env();
   int length = info.Length();
 
-  if(length < 1 || !info[0].IsObject()){
+  if (length < 1 || !info[0].IsObject()){
     Napi::TypeError::New(env, "expected cell").ThrowAsJavaScriptException();
     return env.Null();
   }
@@ -88,15 +88,15 @@ Napi::Value Polyline::NearlyCovers(const Napi::CallbackInfo& info){
   Napi::Env env = info.Env();
   int length = info.Length();
 
-  if(length != 2 || !info[0].IsObject() || !info[1].IsNumber()){
-    Napi::TypeError::New(env, "expected Polyline and Number").ThrowAsJavaScriptException();
+  if (length != 2 || !info[0].IsObject() || !info[1].IsNumber()){
+    Napi::TypeError::New(env, "(polyline: Polyline, margin: number) expected.").ThrowAsJavaScriptException();
     return env.Null();
   }
 
   Napi::Object object = info[0].As<Napi::Object>();
   bool isPolyline = object.InstanceOf(Polyline::constructor.Value());
   if (!isPolyline) {
-    Napi::TypeError::New(env, "Polyline expected.").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "(polyline: Polyline, margin: number) expected.").ThrowAsJavaScriptException();
     return env.Null();
   }
 
@@ -125,40 +125,45 @@ Napi::Value Polyline::GetLength(const Napi::CallbackInfo& info){
 }
 
 Napi::Value Polyline::GetCentroid(const Napi::CallbackInfo& info){
-  
   S2Point s2point = this->s2polyline.GetCentroid();
   S2LatLng s2latlng = S2LatLng(s2point);
-
-  return Napi::String::New(info.Env(), s2latlng.ToStringInDegrees());
+  return LatLng::NewInstance(
+    Napi::Number::New(info.Env(), s2latlng.lat().degrees()),
+    Napi::Number::New(info.Env(), s2latlng.lng().degrees())
+  );
 }
 
 Napi::Value Polyline::Interpolate(const Napi::CallbackInfo& info){
    Napi::Env env = info.Env();
   int length = info.Length();
 
-  if(length != 1 || !info[0].IsNumber()){
+  if (length != 1 || !info[0].IsNumber()){
     Napi::TypeError::New(env, "expected fraction").ThrowAsJavaScriptException();
     return env.Null();
   }
+
   double fraction = info[0].As<Napi::Number>().DoubleValue();
   S2Point s2point = this->s2polyline.Interpolate(fraction);
   S2LatLng s2latlng = S2LatLng(s2point);
-  return Napi::String::New(info.Env(), s2latlng.ToStringInDegrees());
+  return LatLng::NewInstance(
+    Napi::Number::New(info.Env(), s2latlng.lat().degrees()),
+    Napi::Number::New(info.Env(), s2latlng.lng().degrees())
+  );
 }
 
 Napi::Value Polyline::Project(const Napi::CallbackInfo& info){
    Napi::Env env = info.Env();
   int length = info.Length();
 
-  if(length != 1 || !info[0].IsObject()){
-    Napi::TypeError::New(env, "expected LatLng object").ThrowAsJavaScriptException();
+  if (length != 1 || !info[0].IsObject()) {
+    Napi::TypeError::New(env, "(ll: LatLng) expected.").ThrowAsJavaScriptException();
     return env.Null();
   }
 
   Napi::Object object = info[0].As<Napi::Object>();
   bool isLatlng = object.InstanceOf(LatLng::constructor.Value());
   if (!isLatlng) {
-    Napi::TypeError::New(env, "expected LatLng object").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "(ll: LatLng) expected.").ThrowAsJavaScriptException();
     return env.Null();
   }
 
@@ -166,11 +171,16 @@ Napi::Value Polyline::Project(const Napi::CallbackInfo& info){
   S2LatLng sourceLatLng = ll->Get();
 
   int index;
-
   S2Point s2point = this->s2polyline.Project(sourceLatLng.ToPoint(), &index);
   S2LatLng s2latlng = S2LatLng(s2point);
+
+  Napi::Object newPoint = LatLng::NewInstance(
+    Napi::Number::New(info.Env(), s2latlng.lat().degrees()),
+    Napi::Number::New(info.Env(), s2latlng.lng().degrees())
+  );
+
   Napi::Object returnObj = Napi::Object::New(env);
-  returnObj.Set("loc", s2latlng.ToStringInDegrees());
+  returnObj.Set("point", newPoint);
   returnObj.Set("index", index);
   return returnObj;
 }

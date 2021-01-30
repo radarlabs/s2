@@ -14,10 +14,11 @@
 class Polyline : public Napi::ObjectWrap<Polyline> {
   public:
     Polyline(const Napi::CallbackInfo& info);
-    S2Polyline* Get();
 
     static Napi::FunctionReference constructor;
     static Napi::Object Init(Napi::Env env, Napi::Object exports);
+
+    S2Polyline* Get();
 
   private:
     Napi::Value Contains(const Napi::CallbackInfo &info);
