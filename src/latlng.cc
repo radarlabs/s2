@@ -9,7 +9,8 @@ Napi::Object LatLng::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("latitude", &LatLng::Latitude),
     InstanceMethod("longitude", &LatLng::Longitude),
     InstanceMethod("toString", &LatLng::ToString),
-    InstanceMethod("normalized", &LatLng::Normalized)
+    InstanceMethod("normalized", &LatLng::Normalized),
+    InstanceMethod("approxEquals", &LatLng::ApproxEquals)
   });
 
   constructor = Napi::Persistent(func);
@@ -48,8 +49,7 @@ LatLng::LatLng(const Napi::CallbackInfo& info) : Napi::ObjectWrap<LatLng>(info) 
 
     Point* point = Point::Unwrap(object);
     this->s2latlng = S2LatLng(point->Get());
-
-  } else { // lat, lgn
+  } else { // lat, lng
     if (!info[0].IsNumber() || !info[1].IsNumber()) {
       Napi::TypeError::New(env, "(lat: number, lng: number) expected.").ThrowAsJavaScriptException();
       return;
@@ -95,4 +95,38 @@ Napi::Value LatLng::Longitude(const Napi::CallbackInfo& info) {
     info.Env(),
     this->s2latlng.lng().degrees()
   );
+}
+
+Napi::Value LatLng::ApproxEquals(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  int length = info.Length();
+  S1Angle maxError = S1Angle::Radians(1e-15);
+
+  if (length < 1 || length > 2) {
+    Napi::TypeError::New(env, "(ll: LatLng, maxErrorRadians?: number) expected.").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+
+  Napi::Object object = info[0].As<Napi::Object>();
+  bool isLatlng = object.InstanceOf(LatLng::constructor.Value());
+  if (!isLatlng) {
+    Napi::TypeError::New(env, "(ll: LatLng, maxErrorRadians?: number) expected.").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+
+  LatLng* ll = LatLng::Unwrap(object);
+  S2LatLng s2LatLng = ll->Get();
+
+  if (length == 2) {
+    if (!info[1].IsNumber()) {
+      Napi::TypeError::New(env, "(ll: LatLng, maxErrorRadians?: number) expected.").ThrowAsJavaScriptException();
+      return env.Null();
+    }
+
+    double radians = info[1].As<Napi::Number>().DoubleValue();
+    maxError = S1Angle::Radians(radians);
+  }
+
+  bool isEqual = this->s2latlng.ApproxEquals(s2LatLng, maxError);
+  return Napi::Boolean::New(info.Env(), isEqual);
 }

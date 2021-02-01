@@ -33,3 +33,13 @@ test("LatLng#normalize works", () => {
   const normalized = ll.normalized();
   expect(normalized.toString()).toBe('90.000000,-40.254600');
 });
+
+test("LatLng#approxEquals works", () => {
+  const midLakePavilion = [30.248566, 120.139686];
+  const midLakePavilion2 = [30.248569, 120.139686];
+
+  const ll1 = new s2.LatLng(...midLakePavilion);
+  const ll2 = new s2.LatLng(...midLakePavilion2);
+
+  expect(ll1.approxEquals(ll2, 1e-7)).toBe(true);
+});

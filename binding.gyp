@@ -10,10 +10,12 @@
       "./src/builder.cc",
       "./src/cell.cc",
       "./src/cell_id.cc",
+      "./src/earth.cc",
       "./src/latlng.cc",
       "./src/loop.cc",
       "./src/point.cc",
       "./src/polygon.cc",
+      "./src/polyline.cc",
       "./src/region_coverer.cc",
       "./src/cell_union.cc",
 
