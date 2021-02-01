@@ -1,3 +1,5 @@
+## Version 0.0.5
+
 ## Version 0.0.4
 
 - Added CellId.rangeMin & CellId.rangeMax (thanks to @mast)
