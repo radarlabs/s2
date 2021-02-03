@@ -30,13 +30,13 @@ npm install @radarlabs/s2
 ```
 
 To run tests (you'll need Docker):
-```
+```bash
 ./test.sh
 ```
 
 S2 Cells can be generated from BigInt S2 IDs or string tokens:
 
-```
+```javascript
 const s2 = require('@radarlabs/s2');
 
 const cell1 = new s2.CellId(9926595695177891840n);
@@ -51,7 +51,7 @@ console.log(cell2.id());
 
 To generate a covering for a given area:
 
-```
+```javascript
 const s2 = require('@radarlabs/s2');
 
 # an array of lat/lng pairs representing a region (a part of Brooklyn, in this case)
@@ -84,7 +84,7 @@ console.log(coveringSet.contains(pointAtLevel14.token()));
 
 To generate a covering for a given radius around a point:
 
-```
+```javascript
 const s2 = require('@radarlabs/s2');
 
 # make an S2 latlng object for downtown San Diego
@@ -121,7 +121,7 @@ Here's a [visualization](http://s2.sidewalklabs.com/regioncoverer/?center=32.716
 
 Check if a cell is contained in another:
 
-```
+```javascript
 const c1 = s2.CellId.fromToken('89c25a37')
 const c2 = s2.CellId.fromToken('89c25')
 c2.contains(c1)
