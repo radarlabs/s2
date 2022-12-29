@@ -9,9 +9,10 @@
     "url": "https://github.com/radarlabs/s2.git"
   },
   "scripts": {
-    "build": "node-pre-gyp install --build-from-source",
-    "install": "node-pre-gyp install --fallback-to-build",
+    "build": "npm run sync-s2-submodule && node-pre-gyp install --build-from-source",
+    "install": "npm run sync-s2-submodule && node-pre-gyp install --fallback-to-build",
     "test": "jest --logHeapUsage --verbose",
+    "sync-s2-submodule": "git submodule sync && git submodule update",
     "publish-to-s3": "node-pre-gyp package unpublish publish"
   },
   "author": "Jeff Kao (jeff@radar.com)",
