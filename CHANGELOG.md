@@ -1,5 +1,9 @@
 ## Version 0.0.5
 
+- Support Node 18, minimum tested version is now 14
+- Update s2geometry C++ lib to ad5ef6c8cf4b0286868e3116e7347e2e114b4ff2
+- Update node-pre-gyp, node-addon-api, and node-gyp
+
 ## Version 0.0.4
 
 - Added CellId.rangeMin & CellId.rangeMax (thanks to @mast)
