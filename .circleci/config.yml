@@ -3,6 +3,8 @@ version: 2
 dockerbuild: &dockerbuild
   steps:
     - checkout
+    - setup_remote_docker:
+        docker_layer_caching: true
     - run:
         name: "Pull submodules"
         command: |
