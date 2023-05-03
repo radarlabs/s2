@@ -9,8 +9,8 @@
 
 set -e
 
-# loop through node LTS versions 14 - 18, unpublish and publish them
-for node in v14 v16 v18
+# loop through node LTS versions 16 - 20, unpublish and publish them
+for node in v16 v18 v20
 do
   nvm install $node
   nvm use $node

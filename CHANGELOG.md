@@ -1,6 +1,6 @@
 ## Version 0.0.5
 
-- Support Node 18, minimum tested version is now 14
+- Support Node 18 & 20, minimum tested version is now 16
 - Update node-pre-gyp, node-addon-api, and node-gyp
 
 ## Version 0.0.4
