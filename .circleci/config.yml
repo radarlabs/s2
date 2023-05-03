@@ -31,7 +31,7 @@ jobs:
   "node-20":
     <<: *dockerbuild
     docker:
-      - image: node:18.12.1
+      - image: node:20.0.0
 
 workflows:
   version: 2

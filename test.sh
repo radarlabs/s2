@@ -6,8 +6,7 @@ git submodule init
 git submodule sync
 git submodule update
 
-# loop through node 14, 16, 18 and test
-for node in 14 16 18
+for node in 16 18 20
 do
   # build image
   docker build -t test$node -f ./docker/Dockerfile.node$node.test .
