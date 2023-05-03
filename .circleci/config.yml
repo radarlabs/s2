@@ -3,14 +3,18 @@ version: 2
 dockerbuild: &dockerbuild
   steps:
     - checkout
+    - setup_remote_docker:
+        docker_layer_caching: true
     - run:
         name: "Pull submodules"
         command: |
           git submodule init
-          git submodule update --remote
+          git submodule sync
+          git submodule update
     - run:
         name: Install dependencies
-        command: npm install
+        command: |
+          npm install
         when: on_success
     - run:
         name: Test
@@ -18,29 +22,24 @@ dockerbuild: &dockerbuild
         when: on_success
 
 jobs:
-  "node-10":
-    <<: *dockerbuild
-    docker:
-      - image: circleci/node:10.16.2
-  "node-12":
-    <<: *dockerbuild
-    docker:
-      - image: circleci/node:12.8.0
-  "node-14":
-    <<: *dockerbuild
-    docker:
-      - image: circleci/node:14.15.4
   "node-16":
     <<: *dockerbuild
     docker:
       - image: circleci/node:16.5.0
+  "node-18":
+    <<: *dockerbuild
+    docker:
+      - image: node:18.12.1
+  "node-20":
+    <<: *dockerbuild
+    docker:
+      - image: node:20.0.0
 
 workflows:
   version: 2
   build:
     jobs:
-      - "node-10"
-      - "node-12"
-      - "node-14"
       - "node-16"
+      - "node-18"
+      - "node-20"
 
