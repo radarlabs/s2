@@ -72,7 +72,7 @@ covering.forEach(c => console.log(c));
 
 # check if a point is contained inside this region
 const point = new s2.CellId(new s2.LatLng(40.70248844447621, -73.98991584777832));
-const pointAtLevel14 = point.parent(s2Level);
+const pointAtLevel14 = point.parent(s2level);
 console.log(pointAtLevel14.token());
 > 89c25a31
 
@@ -112,7 +112,7 @@ console.log(coveringCells.cellIds().map((cellId) => cellId.token()));
 
 # the "coveringCells" CellUnion is like the "coveringSet" from the previous example, so can be used directly without converting to a set
 # test by checking a cell centered at our lat long
-console.log(coveringCells.contains(new s2.CellId(s2LatLong)));
+console.log(coveringCells.has(new s2.CellId(s2LatLong)));
 > true
 
 ```
