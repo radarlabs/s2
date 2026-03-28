@@ -6,8 +6,8 @@ set -e
 
 # source ~/.zshrc
 
-# loop through node LTS versions 16 - 20, unpublish and publish them
-for node in v16 v18 v20
+# loop through node LTS versions 20 - 24, unpublish and publish them
+for node in v20 v22 v24
 do
   nvm install $node
   nvm use $node

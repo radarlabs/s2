@@ -4,7 +4,7 @@ set -ex
 
 export DOCKER_DEFAULT_PLATFORM="${DOCKER_DEFAULT_PLATFORM:-linux/amd64}"
 
-for node in 20.0.0 18.12.1 16.5.0
+for node in 20.0.0 22.0.0 24.0.0
 do
   # run image
   docker run -it \

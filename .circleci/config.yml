@@ -22,24 +22,24 @@ dockerbuild: &dockerbuild
         when: on_success
 
 jobs:
-  "node-16":
-    <<: *dockerbuild
-    docker:
-      - image: circleci/node:16.5.0
-  "node-18":
-    <<: *dockerbuild
-    docker:
-      - image: node:18.12.1
   "node-20":
     <<: *dockerbuild
     docker:
-      - image: node:20.0.0
+      - image: node:20
+  "node-22":
+    <<: *dockerbuild
+    docker:
+      - image: node:22
+  "node-24":
+    <<: *dockerbuild
+    docker:
+      - image: node:24
 
 workflows:
   version: 2
   build:
     jobs:
-      - "node-16"
-      - "node-18"
       - "node-20"
+      - "node-22"
+      - "node-24"
 
