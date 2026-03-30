@@ -4,5 +4,5 @@ WORKDIR /app
 COPY . /app
 
 RUN npm install
-RUN JOBS=max npx node-pre-gyp rebuild
+RUN JOBS=max npx --no-install node-pre-gyp rebuild
 CMD npm run test
