@@ -14,5 +14,5 @@ do
     -e AWS_SECRET_ACCESS_KEY \
     -e AWS_SESSION_TOKEN \
     node:$node \
-    bash -c 'cd /app && npm install && JOBS=max npx node-pre-gyp build package unpublish publish'
+    bash -c 'cd /app && npm ci && JOBS=max npx --no-install node-pre-gyp build package unpublish publish'
 done
