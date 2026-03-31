@@ -17,9 +17,16 @@ Other JavaScript projects available on GitHub appear unmaintained.
 The project has been built against Node's N-API, meaning that it's compatible across Node.js versions that support BigInt.
 This means that Node.js version 9 and below are unsupported.
 
-As of today, the library is built and tested against Node.js 20, 22 and 24. The library has been in production use at [Radar](https://radar.io) and has been built against OS X and Linux. Feel free to open an issue or PR if you'd like other platform support.
+The library has been in production use at [Radar](https://radar.io) and has been built against OS X and Linux. Feel free to open an issue or PR if you'd like other platform support.
 
 See [test.sh](https://github.com/radarlabs/s2/blob/master/test.sh) for more details.
+
+### Node.js Version Compatibility
+
+| @radarlabs/s2 | Node.js          |
+|---------------|------------------|
+| 0.0.5         | 16, 18, 20       |
+| 0.0.6         | 20, 22, 24       |
 
 ## Usage
 
