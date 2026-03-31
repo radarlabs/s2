@@ -1,3 +1,8 @@
+## Version 0.0.6
+
+- Support Node 22 & 24, minimum tested version is now 20
+- Drop support for Node 16 & 18
+
 ## Version 0.0.5
 
 - Support Node 18 & 20, minimum tested version is now 16

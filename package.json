@@ -1,7 +1,10 @@
 {
   "name": "@radarlabs/s2",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Node.js JavaScript and TypeScript bindings for the Google S2 geolocation library.",
+  "engines": {
+    "node": ">=20"
+  },
   "main": "index.js",
   "types": "index.d.ts",
   "repository": {
@@ -33,7 +36,7 @@
   },
   "dependencies": {
     "@mapbox/node-pre-gyp": "^1.0.10",
-    "node-addon-api": "^1.7.2",
+    "node-addon-api": "^8.0.0",
     "node-gyp": "^9.3.1"
   }
 }
