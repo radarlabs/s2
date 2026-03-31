@@ -12,6 +12,6 @@ do
   nvm install $node
   nvm use $node
   rm -rf node_modules
-  npm install
-  JOBS=max npx node-pre-gyp build package unpublish publish
+  npm ci
+  JOBS=max npx --no-install node-pre-gyp build package unpublish publish
 done
