@@ -107,7 +107,6 @@
       "./third_party/s2geometry/src/s2/s2shapeutil_get_reference_point.cc",
       "./third_party/s2geometry/src/s2/s2shapeutil_range_iterator.cc",
       "./third_party/s2geometry/src/s2/s2shapeutil_visit_crossing_edge_pairs.cc",
-      "./third_party/s2geometry/src/s2/s2text_format.cc",
       "./third_party/s2geometry/src/s2/s2wedge_relations.cc",
     ],
     "defines": [
