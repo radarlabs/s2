@@ -4,14 +4,16 @@
 
 set -e
 
-# source ~/.zshrc
+export NVM_DIR="$HOME/.nvm"
+source "$NVM_DIR/nvm.sh"
 
 # loop through node LTS versions 20 - 24, unpublish and publish them
 for node in v20 v22 v24
 do
   nvm install $node
   nvm use $node
-  rm -rf node_modules
+  echo "building darwin-$(node -p 'process.arch')"
+  rm -rf build node_modules lib/binding/Release
   npm ci
-  JOBS=max npx --no-install node-pre-gyp build package unpublish publish
+  JOBS=max npx --no-install node-pre-gyp rebuild package unpublish publish
 done
