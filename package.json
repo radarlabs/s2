@@ -23,9 +23,9 @@
     "geolocation"
   ],
   "devDependencies": {
-    "jest": "^24.8.0",
     "aws-sdk": "2.x",
-    "bindings": "^1.5.0"
+    "bindings": "^1.5.0",
+    "jest": "^30.4.2"
   },
   "binary": {
     "module_name": "s2",
