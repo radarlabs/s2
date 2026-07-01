@@ -21,6 +21,30 @@ dockerbuild: &dockerbuild
         command: npm run test
         when: on_success
 
+# Forces a compile through node-gyp instead of downloading the prebuilt
+# binary from S3, so the native build toolchain (node-gyp / node-pre-gyp)
+# stays covered even when prebuilts already exist.
+sourcebuild: &sourcebuild
+  steps:
+    - checkout
+    - setup_remote_docker:
+        docker_layer_caching: true
+    - run:
+        name: "Pull submodules"
+        command: |
+          git submodule init
+          git submodule sync
+          git submodule update
+    - run:
+        name: Install dependencies (build from source)
+        command: |
+          npm install --build-from-source
+        when: on_success
+    - run:
+        name: Test
+        command: npm run test
+        when: on_success
+
 jobs:
   "node-20":
     <<: *dockerbuild
@@ -34,6 +58,18 @@ jobs:
     <<: *dockerbuild
     docker:
       - image: node:24
+  "node-20-source":
+    <<: *sourcebuild
+    docker:
+      - image: node:20
+  "node-22-source":
+    <<: *sourcebuild
+    docker:
+      - image: node:22
+  "node-24-source":
+    <<: *sourcebuild
+    docker:
+      - image: node:24
 
 workflows:
   version: 2
@@ -42,4 +78,7 @@ workflows:
       - "node-20"
       - "node-22"
       - "node-24"
+      - "node-20-source"
+      - "node-22-source"
+      - "node-24-source"
 
