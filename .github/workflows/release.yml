@@ -1,0 +1,64 @@
+name: release
+
+# Publishes @radarlabs/s2 to npm with the native prebuilds bundled in the
+# tarball. Trigger by publishing a GitHub Release whose tag matches the
+# version already set in package.json (e.g. v0.0.7).
+on:
+  release:
+    types: [published]
+
+jobs:
+  # Build one N-API prebuild per platform/arch. N-API is ABI-stable across
+  # Node versions, so a single build per platform serves Node 20/22/24.
+  prebuild:
+    name: prebuild (${{ matrix.name }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - { os: ubuntu-latest,    name: linux-x64 }
+          - { os: ubuntu-24.04-arm, name: linux-arm64 }
+          - { os: macos-13,         name: darwin-x64 }
+          - { os: macos-14,         name: darwin-arm64 }
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: JOBS=max npm run build
+      - name: Smoke test the prebuild
+        run: npm test
+      - uses: actions/upload-artifact@v4
+        with:
+          name: prebuild-${{ matrix.name }}
+          path: prebuilds/
+          if-no-files-found: error
+
+  publish:
+    name: publish to npm
+    needs: prebuild
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: "https://registry.npmjs.org"
+      - name: Download all prebuilds
+        uses: actions/download-artifact@v4
+        with:
+          pattern: prebuild-*
+          path: artifacts
+      - name: Assemble prebuilds/
+        run: |
+          mkdir -p prebuilds
+          cp -R artifacts/*/. prebuilds/
+          ls -R prebuilds
+      - name: Publish
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,6 +1,3 @@
-// magic incantation from step 3 @ https://github.com/mapbox/node-pre-gyp#readme
-const binary = require('@mapbox/node-pre-gyp');
-const path = require('path');
-var binding_path = binary.find(path.resolve(path.join(__dirname,'./package.json')));
-const s2 = require(binding_path);
-module.exports = s2;
+// Loads the prebuilt N-API addon shipped in ./prebuilds (built by prebuildify),
+// falling back to a local ./build compile for unsupported platforms.
+module.exports = require('node-gyp-build')(__dirname);
