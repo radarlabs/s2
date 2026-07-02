@@ -42,12 +42,17 @@ jobs:
     name: publish to npm
     needs: prebuild
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # mint the OIDC token for npm trusted publishing + provenance
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: "https://registry.npmjs.org"
+      - name: Upgrade npm (trusted publishing needs >= 11.5.1)
+        run: npm install -g npm@latest
       - name: Download all prebuilds
         uses: actions/download-artifact@v4
         with:
@@ -58,7 +63,8 @@ jobs:
           mkdir -p prebuilds
           cp -R artifacts/*/. prebuilds/
           ls -R prebuilds
+      # No token: auth is via OIDC. One-time setup on npmjs.com — configure a
+      # Trusted Publisher for this package pointing at radarlabs/s2 +
+      # .github/workflows/release.yml. Provenance is attached automatically.
       - name: Publish
         run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
