@@ -38,8 +38,8 @@ jobs:
           path: prebuilds/
           if-no-files-found: error
 
-  publish:
-    name: publish to npm
+  stage-publish:
+    name: stage publish to npm
     needs: prebuild
     runs-on: ubuntu-latest
     permissions:
@@ -49,7 +49,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22 # trusted publishing requires Node >= 22.14
           registry-url: "https://registry.npmjs.org"
       - name: Upgrade npm (trusted publishing needs >= 11.5.1)
         run: npm install -g npm@latest
@@ -63,8 +63,15 @@ jobs:
           mkdir -p prebuilds
           cp -R artifacts/*/. prebuilds/
           ls -R prebuilds
-      # No token: auth is via OIDC. One-time setup on npmjs.com — configure a
-      # Trusted Publisher for this package pointing at radarlabs/s2 +
-      # .github/workflows/release.yml. Provenance is attached automatically.
-      - name: Publish
-        run: npm publish --access public
+      # Stages the release via OIDC (no token). The package does NOT go public
+      # here. One-time setup on npmjs.com: configure a Trusted Publisher for
+      # this package pointing at radarlabs/s2 + .github/workflows/release.yml
+      # with STAGE-ONLY permissions. Provenance is attached automatically.
+      - name: Stage publish
+        run: npm stage publish --access public
+      - name: How to approve
+        run: |
+          echo "Release staged — NOT yet public. A maintainer must approve with 2FA:"
+          echo "  npm stage list"
+          echo "  npm stage view @radarlabs/s2"
+          echo "  npm stage approve @radarlabs/s2   # (or approve/reject on npmjs.com)"
