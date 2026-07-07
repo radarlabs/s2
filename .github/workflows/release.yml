@@ -24,17 +24,17 @@ jobs:
           - { os: ubuntu-22.04-arm, name: linux-arm64 }
           - { os: macos-14,         name: darwin-arm64 }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           submodules: recursive
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 20
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - run: JOBS=max npm run build
       - name: Smoke test the prebuild
         run: npm test
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: prebuild-${{ matrix.name }}
           path: prebuilds/
@@ -48,15 +48,15 @@ jobs:
       contents: read
       id-token: write # mint the OIDC token for npm trusted publishing + provenance
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
         with:
           node-version: 22 # trusted publishing requires Node >= 22.14
           registry-url: "https://registry.npmjs.org"
       - name: Upgrade npm (trusted publishing needs >= 11.5.1)
         run: npm install -g npm@latest
       - name: Download all prebuilds
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: prebuild-*
           path: artifacts

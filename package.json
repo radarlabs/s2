@@ -1,6 +1,6 @@
 {
   "name": "@radarlabs/s2",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Node.js JavaScript and TypeScript bindings for the Google S2 geolocation library.",
   "engines": {
     "node": ">=20"
@@ -19,6 +19,7 @@
     "url": "https://github.com/radarlabs/s2.git"
   },
   "scripts": {
+    "install": "node-gyp-build",
     "build": "prebuildify --napi --strip",
     "test": "jest --logHeapUsage --verbose"
   },
