@@ -17,8 +17,11 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - { os: ubuntu-latest,    name: linux-x64 }
-          - { os: ubuntu-24.04-arm, name: linux-arm64 }
+          # Pin the runner images: stable, and building on the oldest supported
+          # Ubuntu keeps the prebuilt binaries' glibc floor low so they run on
+          # more consumer systems.
+          - { os: ubuntu-22.04,     name: linux-x64 }
+          - { os: ubuntu-22.04-arm, name: linux-arm64 }
           - { os: macos-14,         name: darwin-arm64 }
     steps:
       - uses: actions/checkout@v4
