@@ -3,6 +3,6 @@ FROM node:22
 WORKDIR /app
 COPY . /app
 
-RUN npm ci
+RUN npm ci --ignore-scripts
 RUN JOBS=max npm run build
 CMD npm run test

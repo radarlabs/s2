@@ -15,7 +15,7 @@ build_and_test: &build_and_test
           git submodule update
     - run:
         name: Install dependencies
-        command: npm ci
+        command: npm ci --ignore-scripts
         when: on_success
     - run:
         name: Build addon (prebuildify)
