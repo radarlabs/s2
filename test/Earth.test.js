@@ -1,8 +1,4 @@
-// magic incantation from step 3 @ https://github.com/mapbox/node-pre-gyp#readme
-const binary = require('@mapbox/node-pre-gyp');
-const path = require('path');
-var binding_path = binary.find(path.resolve('./package.json'));
-const s2 = require(binding_path);
+const s2 = require('..');
 
 const westLakeUniversity = [30.135703, 120.075485];
 const apsaraPark = [30.135770, 120.074877];

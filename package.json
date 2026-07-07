@@ -7,36 +7,33 @@
   },
   "main": "index.js",
   "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "prebuilds/",
+    "README.md",
+    "LICENSE"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/radarlabs/s2.git"
   },
   "scripts": {
-    "build": "node-pre-gyp install --build-from-source",
-    "install": "node-pre-gyp install --fallback-to-build",
-    "test": "jest --logHeapUsage --verbose",
-    "publish-to-s3": "node-pre-gyp package unpublish publish"
+    "build": "prebuildify --napi --strip",
+    "test": "jest --logHeapUsage --verbose"
   },
   "author": "Jeff Kao (jeff@radar.com)",
   "license": "Apache-2.0",
   "keywords": [
     "geolocation"
   ],
-  "devDependencies": {
-    "aws-sdk": "2.x",
-    "bindings": "^1.5.0",
-    "jest": "^30.4.2"
-  },
-  "binary": {
-    "module_name": "s2",
-    "module_path": "./lib/binding/{configuration}/{node_abi}-{platform}-{arch}/",
-    "remote_path": "./{module_name}/v{version}/{configuration}/",
-    "package_name": "{module_name}-v{version}-{node_abi}-{platform}-{arch}.tar.gz",
-    "host": "https://node-s2-binaries.s3.amazonaws.com"
-  },
   "dependencies": {
-    "@mapbox/node-pre-gyp": "^2.0.0",
+    "node-gyp-build": "^4.8.4"
+  },
+  "devDependencies": {
+    "jest": "^30.4.2",
     "node-addon-api": "^8.0.0",
-    "node-gyp": "^11.0.0"
+    "node-gyp": "^11.0.0",
+    "prebuildify": "^6.0.1"
   }
 }

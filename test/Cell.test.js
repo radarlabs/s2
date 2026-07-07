@@ -1,8 +1,4 @@
-// magic incantation from step 3 @ https://github.com/mapbox/node-pre-gyp#readme
-const binary = require('@mapbox/node-pre-gyp');
-const path = require('path');
-var binding_path = binary.find(path.resolve('./package.json'));
-const s2 = require(binding_path);
+const s2 = require('..');
 
 test("Cell#constructor accepts cellId", () => {
   const id = 6924439526941130752n;

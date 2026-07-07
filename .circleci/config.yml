@@ -1,6 +1,8 @@
 version: 2
 
-dockerbuild: &dockerbuild
+# The addon is compiled from source with prebuildify and loaded via
+# node-gyp-build; there is no prebuilt download step in CI.
+build_and_test: &build_and_test
   steps:
     - checkout
     - setup_remote_docker:
@@ -13,32 +15,11 @@ dockerbuild: &dockerbuild
           git submodule update
     - run:
         name: Install dependencies
-        command: |
-          npm install
+        command: npm ci
         when: on_success
     - run:
-        name: Test
-        command: npm run test
-        when: on_success
-
-# Forces a compile through node-gyp instead of downloading the prebuilt
-# binary from S3, so the native build toolchain (node-gyp / node-pre-gyp)
-# stays covered even when prebuilts already exist.
-sourcebuild: &sourcebuild
-  steps:
-    - checkout
-    - setup_remote_docker:
-        docker_layer_caching: true
-    - run:
-        name: "Pull submodules"
-        command: |
-          git submodule init
-          git submodule sync
-          git submodule update
-    - run:
-        name: Install dependencies (build from source)
-        command: |
-          npm install --build-from-source
+        name: Build addon (prebuildify)
+        command: JOBS=max npm run build
         when: on_success
     - run:
         name: Test
@@ -47,27 +28,15 @@ sourcebuild: &sourcebuild
 
 jobs:
   "node-20":
-    <<: *dockerbuild
+    <<: *build_and_test
     docker:
       - image: node:20
   "node-22":
-    <<: *dockerbuild
+    <<: *build_and_test
     docker:
       - image: node:22
   "node-24":
-    <<: *dockerbuild
-    docker:
-      - image: node:24
-  "node-20-source":
-    <<: *sourcebuild
-    docker:
-      - image: node:20
-  "node-22-source":
-    <<: *sourcebuild
-    docker:
-      - image: node:22
-  "node-24-source":
-    <<: *sourcebuild
+    <<: *build_and_test
     docker:
       - image: node:24
 
@@ -78,7 +47,3 @@ workflows:
       - "node-20"
       - "node-22"
       - "node-24"
-      - "node-20-source"
-      - "node-22-source"
-      - "node-24-source"
-
