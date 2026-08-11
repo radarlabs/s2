@@ -33,4 +33,15 @@ Polygon::Polygon(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Polygon>(inf
     Napi::TypeError::New(env, "malformed ArrayBuffer for S2Polygon.").ThrowAsJavaScriptException();
     return;
   }
+
+  // Report the native allocation to V8 so GC pressure reflects it.
+  this->externalMemory = static_cast<int64_t>(this->s2polygon->SpaceUsed());
+  Napi::MemoryManagement::AdjustExternalMemory(env, this->externalMemory);
+}
+
+void Polygon::Finalize(Napi::BasicEnv env) {
+  if (this->externalMemory > 0) {
+    Napi::MemoryManagement::AdjustExternalMemory(env, -this->externalMemory);
+    this->externalMemory = 0;
+  }
 }

@@ -67,6 +67,21 @@ CellUnion::CellUnion(const Napi::CallbackInfo &info) : Napi::ObjectWrap<CellUnio
 
     this->s2cellunion = S2CellUnion(std::move(cellIdVector));
   }
+
+  // Report the native allocation to V8 so GC pressure reflects it.
+  // S2CellUnion has no SpaceUsed(); its storage is a vector of cell ids.
+  // Use capacity() rather than num_cells(): Normalize() can shrink the size
+  // without releasing the vector's allocation.
+  this->externalMemory = static_cast<int64_t>(
+    sizeof(S2CellUnion) + this->s2cellunion.cell_ids().capacity() * sizeof(S2CellId));
+  Napi::MemoryManagement::AdjustExternalMemory(env, this->externalMemory);
+}
+
+void CellUnion::Finalize(Napi::BasicEnv env) {
+  if (this->externalMemory > 0) {
+    Napi::MemoryManagement::AdjustExternalMemory(env, -this->externalMemory);
+    this->externalMemory = 0;
+  }
 }
 
 S2CellUnion CellUnion::Get() {
@@ -167,7 +182,7 @@ Napi::Value CellUnion::Intersection(const Napi::CallbackInfo &info) {
   }
 
   return constructor.New({
-    Napi::External<S2CellUnion>::New(env, new S2CellUnion(s2Intersection))
+    Napi::External<S2CellUnion>::New(env, &s2Intersection)
   });
 }
 

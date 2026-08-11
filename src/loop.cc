@@ -48,4 +48,15 @@ Loop::Loop(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Loop>(info)  {
     Napi::Error::New(env, StringPrintf("Loop is invalid: %s", error.text().c_str())).ThrowAsJavaScriptException();
     return;
   }
+
+  // Report the native allocation to V8 so GC pressure reflects it.
+  this->externalMemory = static_cast<int64_t>(this->s2loop->SpaceUsed());
+  Napi::MemoryManagement::AdjustExternalMemory(env, this->externalMemory);
+}
+
+void Loop::Finalize(Napi::BasicEnv env) {
+  if (this->externalMemory > 0) {
+    Napi::MemoryManagement::AdjustExternalMemory(env, -this->externalMemory);
+    this->externalMemory = 0;
+  }
 }
