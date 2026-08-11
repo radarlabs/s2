@@ -14,6 +14,7 @@
 class Polyline : public Napi::ObjectWrap<Polyline> {
   public:
     Polyline(const Napi::CallbackInfo& info);
+    void Finalize(Napi::BasicEnv env) override;
 
     static Napi::FunctionReference constructor;
     static Napi::Object Init(Napi::Env env, Napi::Object exports);
@@ -29,6 +30,7 @@ class Polyline : public Napi::ObjectWrap<Polyline> {
     Napi::Value Project(const Napi::CallbackInfo &info);
 
     S2Polyline s2polyline;
+    int64_t externalMemory = 0;
 };
 
 #endif

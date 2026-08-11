@@ -54,6 +54,17 @@ Polyline::Polyline(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Polyline>(
     Napi::Error::New(env, StringPrintf("Polyline is invalid: %s", error.text().c_str())).ThrowAsJavaScriptException();
     return;
   }
+
+  // Report the native allocation to V8 so GC pressure reflects it.
+  this->externalMemory = static_cast<int64_t>(this->s2polyline.SpaceUsed());
+  Napi::MemoryManagement::AdjustExternalMemory(env, this->externalMemory);
+}
+
+void Polyline::Finalize(Napi::BasicEnv env) {
+  if (this->externalMemory > 0) {
+    Napi::MemoryManagement::AdjustExternalMemory(env, -this->externalMemory);
+    this->externalMemory = 0;
+  }
 }
 
 Napi::Value Polyline::Contains(const Napi::CallbackInfo& info){

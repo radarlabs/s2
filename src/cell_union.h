@@ -12,11 +12,13 @@ class CellUnion : public Napi::ObjectWrap<CellUnion> {
     static Napi::Object Init(Napi::Env env, Napi::Object exports);
 
     CellUnion(const Napi::CallbackInfo& info);
+    void Finalize(Napi::BasicEnv env) override;
 
     S2CellUnion Get();
 
   private:
     S2CellUnion s2cellunion;
+    int64_t externalMemory = 0;
 
     Napi::Value Contains(const Napi::CallbackInfo &info);
     Napi::Value Intersects(const Napi::CallbackInfo &info);
