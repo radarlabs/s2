@@ -70,8 +70,10 @@ CellUnion::CellUnion(const Napi::CallbackInfo &info) : Napi::ObjectWrap<CellUnio
 
   // Report the native allocation to V8 so GC pressure reflects it.
   // S2CellUnion has no SpaceUsed(); its storage is a vector of cell ids.
+  // Use capacity() rather than num_cells(): Normalize() can shrink the size
+  // without releasing the vector's allocation.
   this->externalMemory = static_cast<int64_t>(
-    sizeof(S2CellUnion) + this->s2cellunion.num_cells() * sizeof(S2CellId));
+    sizeof(S2CellUnion) + this->s2cellunion.cell_ids().capacity() * sizeof(S2CellId));
   Napi::MemoryManagement::AdjustExternalMemory(env, this->externalMemory);
 }
 
