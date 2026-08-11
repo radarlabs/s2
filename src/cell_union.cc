@@ -182,7 +182,7 @@ Napi::Value CellUnion::Intersection(const Napi::CallbackInfo &info) {
   }
 
   return constructor.New({
-    Napi::External<S2CellUnion>::New(env, new S2CellUnion(s2Intersection))
+    Napi::External<S2CellUnion>::New(env, &s2Intersection)
   });
 }
 
