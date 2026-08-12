@@ -1,6 +1,6 @@
 {
   "name": "@radarlabs/s2",
-  "version": "0.0.9-alpha",
+  "version": "0.0.9-alpha.1",
   "description": "Node.js JavaScript and TypeScript bindings for the Google S2 geolocation library.",
   "engines": {
     "node": ">=20"
