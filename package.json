@@ -16,11 +16,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/radarlabs/s2.git"
+    "url": "git+https://github.com/radarlabs/s2.git"
   },
   "scripts": {
     "install": "node-gyp-build",
     "build": "prebuildify --napi --strip",
+    "verify-prebuilds": "node scripts/verify-prebuilds.js",
+    "prepublishOnly": "npm run verify-prebuilds",
     "test": "jest --logHeapUsage --verbose"
   },
   "author": "Jeff Kao (jeff@radar.com)",
