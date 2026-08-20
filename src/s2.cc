@@ -9,8 +9,10 @@
 #include "polygon.h"
 #include "polyline.h"
 #include "region_coverer.h"
+#include "region_term_indexer.h"
 
-Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
+Napi::Object InitAll(Napi::Env env, Napi::Object exports)
+{
   Builder::Init(env, exports);
   Cell::Init(env, exports);
   CellId::Init(env, exports);
@@ -21,6 +23,7 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
   Polygon::Init(env, exports);
   Polyline::Init(env, exports);
   CellUnion::Init(env, exports);
+  RegionTermIndexer::Init(env, exports);
   return RegionCoverer::Init(env, exports);
 }
 

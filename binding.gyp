@@ -17,6 +17,7 @@
       "./src/polygon.cc",
       "./src/polyline.cc",
       "./src/region_coverer.cc",
+      "./src/region_term_indexer.cc",
       "./src/cell_union.cc",
 
       "./third_party/s2geometry/src/s2/base/stringprintf.cc",
