@@ -52,6 +52,7 @@ Napi::Value RegionCoverer::GetCoveringIds(const Napi::CallbackInfo &info) {
   GetS2Options(optionsObject, options);
 
   std::vector<S2Point> vertices;
+  vertices.reserve(arrayLength);
   for (uint32_t i = 0; i < arrayLength; i++) {
     Napi::Value obj = llArray[i];
     if (obj.IsObject()) {
@@ -139,6 +140,7 @@ Napi::Value RegionCoverer::GetCoveringTokens(const Napi::CallbackInfo &info) {
   GetS2Options(optionsObject, options);
 
   std::vector<S2Point> vertices;
+  vertices.reserve(arrayLength);
   for (uint32_t i = 0; i < arrayLength; i++) {
     Napi::Value obj = llArray[i];
     if (obj.IsObject()) {
@@ -226,6 +228,7 @@ Napi::Value RegionCoverer::GetCoveringCellUnion(const Napi::CallbackInfo &info) 
   GetS2Options(optionsObject, options);
 
   std::vector<S2Point> vertices;
+  vertices.reserve(arrayLength);
   for (uint32_t i = 0; i < arrayLength; i++) {
     Napi::Value obj = llArray[i];
     if (obj.IsObject()) {
