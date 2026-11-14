@@ -79,10 +79,10 @@ test("CellUnion#intersects works", () => {
     '89c266c', '89c2674'
   ]);
 
-  expect(cu.contains(pointInside)).toBe(true) ;
-  expect(cu.contains(unionInside)).toBe(true) ;
-  expect(cu.contains(unionIntersects)).toBe(true) ;
-  expect(cu.contains(unionOutside)).toBe(false) ;
+  expect(cu.intersects(pointInside)).toBe(true) ;
+  expect(cu.intersects(unionInside)).toBe(true) ;
+  expect(cu.intersects(unionIntersects)).toBe(true) ;
+  expect(cu.intersects(unionOutside)).toBe(false) ;
 });
 
 test("CellUnion#union works", () => {
@@ -169,4 +169,24 @@ test("CellUnion operations preserve their inputs and return reusable results", (
     expect(left.tokens()).toEqual(['1', '3']);
     expect(right.tokens()).toEqual(['3', '5']);
   }
+});
+
+test("Empty CellUnion results remain valid operands", () => {
+  const area = new s2.CellUnion(['1', '3']);
+  const empty = area.difference(area);
+
+  expect(empty.ids()).toEqual(new BigUint64Array());
+  expect(empty.cellIds()).toEqual([]);
+  expect(area.contains(empty)).toBe(true);
+  expect(empty.contains(area)).toBe(false);
+  expect(empty.contains(empty)).toBe(true);
+  expect(area.intersects(empty)).toBe(false);
+  expect(empty.intersects(area)).toBe(false);
+  expect(empty.intersects(empty)).toBe(false);
+  expect(empty.union(area).tokens()).toEqual(area.tokens());
+  expect(area.union(empty).tokens()).toEqual(area.tokens());
+  expect(empty.intersection(area).tokens()).toEqual([]);
+  expect(area.intersection(empty).tokens()).toEqual([]);
+  expect(empty.difference(area).tokens()).toEqual([]);
+  expect(area.difference(empty).tokens()).toEqual(area.tokens());
 });
