@@ -2,18 +2,18 @@
 #define RADAR_REGION_COVERER
 
 #include <napi.h>
-#include "polygon.h"
+#include <memory>
+#include "s2/base/stringprintf.h"
+#include "s2/s2error.h"
+#include "s2/s2loop.h"
 #include "cell_id.h"
 #include "cell_union.h"
 #include "s2/s1angle.h"
-#include "s2/s2builder.h"
-#include "s2/s2builderutil_s2polygon_layer.h"
 #include "s2/s2cap.h"
 #include "s2/s2cell_union.h"
 #include "s2/s2earth.h"
 #include "s2/s2polygon.h"
 #include "s2/s2region_coverer.h"
-#include "s2/third_party/absl/memory/memory.h"
 
 class RegionCoverer : public Napi::ObjectWrap<RegionCoverer> {
 
@@ -38,12 +38,9 @@ class RegionCoverer : public Napi::ObjectWrap<RegionCoverer> {
     );
 
     static S2CellUnion GetCovering(
-      Napi::Env env,
-      std::vector<S2Point> &vertices,
-      S2RegionCoverer::Options &coverOptions,
-      S2Error &loopError,
-      S2Error &buildError,
-      S2Error &outputError
+      const std::vector<S2Point> &vertices,
+      const S2RegionCoverer::Options &coverOptions,
+      S2Error &loopError
     );
 
     static S2CellUnion GetRadiusCovering(

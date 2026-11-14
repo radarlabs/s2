@@ -1,7 +1,5 @@
 #include "region_coverer.h"
 
-using absl::make_unique;
-
 Napi::FunctionReference RegionCoverer::constructor;
 
 Napi::Object RegionCoverer::Init(Napi::Env env, Napi::Object exports) {
@@ -52,6 +50,7 @@ Napi::Value RegionCoverer::GetCoveringIds(const Napi::CallbackInfo &info) {
   GetS2Options(optionsObject, options);
 
   std::vector<S2Point> vertices;
+  vertices.reserve(arrayLength);
   for (uint32_t i = 0; i < arrayLength; i++) {
     Napi::Value obj = llArray[i];
     if (obj.IsObject()) {
@@ -65,38 +64,17 @@ Napi::Value RegionCoverer::GetCoveringIds(const Napi::CallbackInfo &info) {
   }
 
   S2Error loopError;
-  S2Error buildError;
-  S2Error outputError;
 
   S2CellUnion covering = GetCovering(
-    env,
     vertices,
     options,
-    loopError,
-    buildError,
-    outputError
+    loopError
   );
 
   if (!loopError.ok()) {
     Napi::Error::New(
       env,
       StringPrintf("Loop is invalid: %d %s", loopError.code(), loopError.text().c_str())
-    ).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-
-  if (!buildError.ok()) {
-    Napi::Error::New(
-      env,
-      StringPrintf("Build failed: %d %s", buildError.code(), buildError.text().c_str())
-    ).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-
-  if (!outputError.ok()) {
-    Napi::Error::New(
-      env,
-      StringPrintf("Output is invalid: %d %s", outputError.code(), outputError.text().c_str())
     ).ThrowAsJavaScriptException();
     return env.Null();
   }
@@ -139,6 +117,7 @@ Napi::Value RegionCoverer::GetCoveringTokens(const Napi::CallbackInfo &info) {
   GetS2Options(optionsObject, options);
 
   std::vector<S2Point> vertices;
+  vertices.reserve(arrayLength);
   for (uint32_t i = 0; i < arrayLength; i++) {
     Napi::Value obj = llArray[i];
     if (obj.IsObject()) {
@@ -152,38 +131,17 @@ Napi::Value RegionCoverer::GetCoveringTokens(const Napi::CallbackInfo &info) {
   }
 
   S2Error loopError;
-  S2Error buildError;
-  S2Error outputError;
 
   S2CellUnion covering = GetCovering(
-    env,
     vertices,
     options,
-    loopError,
-    buildError,
-    outputError
+    loopError
   );
 
   if (!loopError.ok()) {
     Napi::Error::New(
       env,
       StringPrintf("Loop is invalid: %d %s", loopError.code(), loopError.text().c_str())
-    ).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-
-  if (!buildError.ok()) {
-    Napi::Error::New(
-      env,
-      StringPrintf("Build failed: %d %s", buildError.code(), buildError.text().c_str())
-    ).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-
-  if (!outputError.ok()) {
-    Napi::Error::New(
-      env,
-      StringPrintf("Output is invalid: %d %s", outputError.code(), outputError.text().c_str())
     ).ThrowAsJavaScriptException();
     return env.Null();
   }
@@ -226,6 +184,7 @@ Napi::Value RegionCoverer::GetCoveringCellUnion(const Napi::CallbackInfo &info) 
   GetS2Options(optionsObject, options);
 
   std::vector<S2Point> vertices;
+  vertices.reserve(arrayLength);
   for (uint32_t i = 0; i < arrayLength; i++) {
     Napi::Value obj = llArray[i];
     if (obj.IsObject()) {
@@ -239,38 +198,17 @@ Napi::Value RegionCoverer::GetCoveringCellUnion(const Napi::CallbackInfo &info) 
   }
 
   S2Error loopError;
-  S2Error buildError;
-  S2Error outputError;
 
   S2CellUnion covering = GetCovering(
-    env,
     vertices,
     options,
-    loopError,
-    buildError,
-    outputError
+    loopError
   );
 
   if (!loopError.ok()) {
     Napi::Error::New(
       env,
       StringPrintf("Loop is invalid: %d %s", loopError.code(), loopError.text().c_str())
-    ).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-
-  if (!buildError.ok()) {
-    Napi::Error::New(
-      env,
-      StringPrintf("Build failed: %d %s", buildError.code(), buildError.text().c_str())
-    ).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-
-  if (!outputError.ok()) {
-    Napi::Error::New(
-      env,
-      StringPrintf("Output is invalid: %d %s", outputError.code(), outputError.text().c_str())
     ).ThrowAsJavaScriptException();
     return env.Null();
   }
@@ -404,32 +342,23 @@ void RegionCoverer::GetS2Options(
 }
 
 S2CellUnion RegionCoverer::GetCovering(
-  Napi::Env env,
-  std::vector<S2Point> &vertices,
-  S2RegionCoverer::Options &coverOptions,
-  S2Error &loopError,
-  S2Error &buildError,
-  S2Error &outputError
+  const std::vector<S2Point> &vertices,
+  const S2RegionCoverer::Options &coverOptions,
+  S2Error &loopError
 ) {
-  S2Loop loop(vertices, S2Debug::ALLOW);
-  loop.Normalize();
+  // Validate explicitly so invalid input becomes a JS exception in debug builds too.
+  auto loop = std::make_unique<S2Loop>(vertices, S2Debug::DISABLE);
+  loop->Normalize();
+  if (loop->FindValidationError(&loopError)) { return S2CellUnion(); }
 
-  bool loopOk = !loop.FindValidationError(&loopError);
-  if (!loopOk) { return S2CellUnion(); }
+  // S2 treats a one-vertex loop as empty or full. The previous builder ignored
+  // both because they have no edges, returning an empty covering in either case.
+  if (loop->is_empty_or_full()) { return S2CellUnion(); }
 
-  S2Builder::Options builderOptions;
-  S2Builder builder(builderOptions);
-
-  S2Polygon output;
-  builder.StartLayer(std::make_unique<s2builderutil::S2PolygonLayer>(&output));
-  builder.AddLoop(loop);
-
-  bool buildOk = builder.Build(&buildError);
-  if (!buildOk) { return S2CellUnion(); }
-
-  bool outputOk = !output.FindValidationError(&outputError);
-  if (!outputOk) { return S2CellUnion(); }
-
+  // A single validated loop needs neither edge assembly nor another validation
+  // pass. Transfer its vertices to the polygon instead of rebuilding them via
+  // S2Builder. Keep S2Polygon as the region to preserve its covering behavior.
+  S2Polygon output(std::move(loop), S2Debug::DISABLE);
   S2RegionCoverer coverer(coverOptions);
   return coverer.GetCovering(output);
 }
