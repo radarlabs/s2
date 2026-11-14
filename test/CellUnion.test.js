@@ -144,3 +144,29 @@ test("CellUnion#difference works", () => {
   expect(new Set(difference.tokens()))
     .toEqual(new Set(['89c25bf1','89c25bf3','89c25bf7']));
 });
+
+test("CellUnion operations preserve their inputs and return reusable results", () => {
+  const left = new s2.CellUnion(['1', '3']);
+  const right = new s2.CellUnion(['3', '5']);
+
+  for (let i = 0; i < 3; i++) {
+    expect(left.contains(right)).toBe(false);
+    expect(left.intersects(right)).toBe(true);
+    expect(left.contains(left)).toBe(true);
+    expect(left.intersects(left)).toBe(true);
+
+    const union = left.union(right);
+    const intersection = left.intersection(right);
+    const difference = left.difference(right);
+    expect(union.tokens()).toEqual(['1', '3', '5']);
+    expect(intersection.tokens()).toEqual(['3']);
+    expect(difference.tokens()).toEqual(['1']);
+    expect(union.difference(intersection).tokens()).toEqual(['1', '5']);
+    expect(left.union(left).tokens()).toEqual(['1', '3']);
+    expect(left.intersection(left).tokens()).toEqual(['1', '3']);
+    expect(left.difference(left).tokens()).toEqual([]);
+
+    expect(left.tokens()).toEqual(['1', '3']);
+    expect(right.tokens()).toEqual(['3', '5']);
+  }
+});

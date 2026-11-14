@@ -43,6 +43,17 @@ test("Polyline#getLength", () => {
   expect(polyline.getLength().toFixed(PRECISION)).toBe("805.441648");
 });
 
+test("Polyline#nearlyCovers preserves both polylines across repeated calls", () => {
+  const other = new s2.Polyline(baiCauseway.map(([lat, lng]) => new s2.LatLng(lat, lng)));
+  const length = other.getLength();
+  for (let i = 0; i < 100; i++) {
+    expect(polyline.nearlyCovers(other, 1e-5)).toBe(true);
+    expect(polyline.nearlyCovers(polyline, 1e-5)).toBe(true);
+  }
+  expect(other.getLength()).toBe(length);
+  expect(polyline.getLength()).toBe(length);
+});
+
 test("Polyline#getCentroid", () => {
   const centroid = polyline.getCentroid();
   expect(centroid.latitude().toFixed(PRECISION)).toBe("30.258369");

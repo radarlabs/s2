@@ -14,7 +14,7 @@ class CellUnion : public Napi::ObjectWrap<CellUnion> {
     CellUnion(const Napi::CallbackInfo& info);
     void Finalize(Napi::BasicEnv env) override;
 
-    S2CellUnion Get();
+    const S2CellUnion& Get() const;
 
   private:
     S2CellUnion s2cellunion;

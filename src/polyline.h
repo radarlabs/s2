@@ -19,7 +19,7 @@ class Polyline : public Napi::ObjectWrap<Polyline> {
     static Napi::FunctionReference constructor;
     static Napi::Object Init(Napi::Env env, Napi::Object exports);
 
-    S2Polyline* Get();
+    const S2Polyline& Get() const;
 
   private:
     Napi::Value Contains(const Napi::CallbackInfo &info);

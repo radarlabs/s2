@@ -44,7 +44,8 @@ CellUnion::CellUnion(const Napi::CallbackInfo &info) : Napi::ObjectWrap<CellUnio
       Napi::TypeError::New(env, "S2 cell union is invalid.").ThrowAsJavaScriptException();
       return;
     }
-    this->s2cellunion = *external.Data();
+    // Internal callers pass temporary results that are consumed synchronously.
+    this->s2cellunion = std::move(*external.Data());
   } else if (info[0].IsArray()) {
     Napi::Array cellIdArray = info[0].As<Napi::Array>();
     uint32_t arrayLength = cellIdArray.Length();
@@ -84,7 +85,7 @@ void CellUnion::Finalize(Napi::BasicEnv env) {
   }
 }
 
-S2CellUnion CellUnion::Get() {
+const S2CellUnion& CellUnion::Get() const {
   return this->s2cellunion;
 }
 

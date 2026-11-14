@@ -115,15 +115,13 @@ Napi::Value Polyline::NearlyCovers(const Napi::CallbackInfo& info){
   S1Angle max_error = S1Angle::Degrees(max_error_degree);
 
   Polyline* polyline = Polyline::Unwrap(object);
-  S2Polyline* s2polyline = polyline->Get();
-
-  isCover = this->s2polyline.NearlyCovers(*s2polyline, max_error);
+  isCover = this->s2polyline.NearlyCovers(polyline->Get(), max_error);
 
   return Napi::Boolean::New(info.Env(), isCover);
 }
 
-S2Polyline* Polyline::Get() {
-  return this->s2polyline.Clone();
+const S2Polyline& Polyline::Get() const {
+  return this->s2polyline;
 }
 
 Napi::Value Polyline::GetLength(const Napi::CallbackInfo& info){
