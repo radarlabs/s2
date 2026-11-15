@@ -45,10 +45,14 @@ Napi::Value Builder::AddLoop(const Napi::CallbackInfo &info) {
 
   Loop* loop = Loop::Unwrap(object);
 
-  this->output = make_unique<S2Polygon>();
-  this->s2builder->StartLayer(
-    make_unique<S2PolygonLayer>(this->output.get())
-  );
+  if (!this->layerStarted) {
+    // All loops in a batch share one layer and its live output polygon.
+    this->output = make_unique<S2Polygon>();
+    this->s2builder->StartLayer(
+      make_unique<S2PolygonLayer>(this->output.get())
+    );
+    this->layerStarted = true;
+  }
   this->s2builder->AddLoop(*loop->s2loop);
 
   return env.Null();
@@ -64,6 +68,9 @@ Napi::Value Builder::Build(const Napi::CallbackInfo &info) {
 
   S2Error error;
   bool buildOk = this->s2builder->Build(&error);
+  // S2Builder clears its layers on both success and failure. Keep the output
+  // for repeated build() calls, but register a new layer for the next batch.
+  this->layerStarted = false;
   if (!buildOk) {
     Napi::Error::New(env, StringPrintf("Build failed: %s", error.text().c_str())).ThrowAsJavaScriptException();
     return env.Null();
