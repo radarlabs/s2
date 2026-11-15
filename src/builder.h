@@ -21,6 +21,7 @@ class Builder : public Napi::ObjectWrap<Builder> {
     std::unique_ptr<S2Builder> s2builder;
     std::unique_ptr<S2Builder::Options> s2builderOptions;
     std::unique_ptr<S2Polygon> output;
+    bool layerStarted = false;
 
     Napi::Value AddLoop(const Napi::CallbackInfo &info);
     Napi::Value Build(const Napi::CallbackInfo &info);
